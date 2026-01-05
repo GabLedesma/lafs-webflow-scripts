@@ -178,21 +178,25 @@
 
           wfLog("elements:", elements);
 
-          paymentForm.innerHTML = `
-            <form id="blink-payment-form">
-              <div id="blink-gpay" style="margin-top:12px;">${elements.googlePay || ""}</div>
-              <div id="blink-applepay" style="margin-top:12px;">${elements.applePay || ""}</div>
-              <div id="blink-card">${elements.card || ""}</div>
+          document.getElementById("cc-element").innerHTML = elements.card;
+          document.getElementById("apple-pay-element").innerHTML = elements.applePay;
+          document.getElementById("google-pay-element").innerHTML = elements.googlePay;
 
-              <div style="text-align:center;margin-top:20px;">
-                <button id="blink-pay-button"
-                  style="background:#3C2AE7;color:#fff;border:none;
-                  border-radius:12px;padding:12px 24px;font-size:16px;cursor:pointer;">
-                  Pay Now
-                </button>
-              </div>
-            </form>
-          `;
+          // paymentForm.innerHTML = `
+          //   <form id="blink-payment-form">
+          //     <div id="blink-gpay" style="margin-top:12px;">${elements.googlePay || ""}</div>
+          //     <div id="blink-applepay" style="margin-top:12px;">${elements.applePay || ""}</div>
+          //     <div id="blink-card">${elements.card || ""}</div>
+
+          //     <div style="text-align:center;margin-top:20px;">
+          //       <button id="blink-pay-button"
+          //         style="background:#3C2AE7;color:#fff;border:none;
+          //         border-radius:12px;padding:12px 24px;font-size:16px;cursor:pointer;">
+          //         Pay Now
+          //       </button>
+          //     </div>
+          //   </form>
+          // `;
 
           document
             .getElementById("blink-pay-button")
