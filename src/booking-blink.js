@@ -2,6 +2,7 @@
 // 💳 Booking – Blink Payment
 // ===============================
 (() => {
+    wfLog("Booking Blink Payment script loadedzxc");
   document.body.addEventListener("click", async (event) => {
     const btn =
       event.target.closest(".book-button") ||
@@ -175,11 +176,13 @@
 
           const { elements } = data;
 
+          wfLog("elements:", elements);
+
           paymentForm.innerHTML = `
             <form id="blink-payment-form">
-              <div id="blink-card">${elements.card || ""}</div>
               <div id="blink-gpay" style="margin-top:12px;">${elements.googlePay || ""}</div>
               <div id="blink-applepay" style="margin-top:12px;">${elements.applePay || ""}</div>
+              <div id="blink-card">${elements.card || ""}</div>
 
               <div style="text-align:center;margin-top:20px;">
                 <button id="blink-pay-button"
@@ -208,7 +211,7 @@
 
       renderTotals();
     } catch (err) {
-      console.error("🔥 Blink booking failed:", err);
+      wfErr("🔥 Blink booking failed:", err);
       paymentForm.innerHTML =
         "<div style='color:red;text-align:center;'>Something went wrong.</div>";
     }
