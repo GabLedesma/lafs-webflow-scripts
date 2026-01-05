@@ -208,6 +208,7 @@
               }, 3000);
             });
         } catch (err) {
+          wfErr("🔥 Blink initialization failed:", err);
           paymentForm.innerHTML =
             "<div style='color:red;text-align:center;'>Blink initialization failed.</div>";
         }
