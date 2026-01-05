@@ -41,7 +41,7 @@
 
     const popup = document.getElementById("payment-popup");
     const loadingSpinner = document.getElementById("loading-spinner");
-    const paymentForm = document.getElementById("payment-form");
+    const paymentForm = document.getElementById("payment");
 
     // Overlay loader
     const processingOverlay = document.createElement("div");
@@ -478,7 +478,7 @@
   document.querySelectorAll(".close-popup").forEach(btn => {
     // Re-select the popup + form for this script
     const popup = document.getElementById("payment-popup");
-    const paymentForm = document.getElementById("payment-form");
+    const paymentForm = document.getElementById("payment");
     
     document.querySelectorAll(".close-popup").forEach(btn => {
       btn.addEventListener("click", () => {

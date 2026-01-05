@@ -14,7 +14,7 @@
 
     const popup = document.getElementById("payment-popup");
     const loadingSpinner = document.getElementById("loading-spinner");
-    const paymentForm = document.getElementById("payment-form");
+    const paymentForm = document.getElementById("payment");
 
     if (!popup || !paymentForm) return;
 
@@ -231,7 +231,7 @@
       document.body.style.width = "";
       window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
-      document.getElementById("payment-form").innerHTML = "";
+      document.getElementById("payment").innerHTML = "";
     });
   });
 })();
