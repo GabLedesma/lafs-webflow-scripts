@@ -145,7 +145,19 @@
       // Blink initialization
       // ===============================
       async function initializeBlinkPayment(totalAmount) {
-        paymentForm.innerHTML = "";
+        const ccEl = document.getElementById("cc-element");
+        const apEl = document.getElementById("apple-pay-element");
+        const gpEl = document.getElementById("google-pay-element");
+
+        if (!ccEl || !apEl || !gpEl) {
+          wfErr("Blink containers missing", { ccEl, apEl, gpEl });
+          return;
+        }
+
+        // Clear safely
+        ccEl.innerHTML = "";
+        apEl.innerHTML = "";
+        gpEl.innerHTML = "";
 
         const bookingData = {
           name: document.getElementById("payment-name")?.value || "",
@@ -178,9 +190,9 @@
 
           wfLog("elements:", elements);
 
-          document.getElementById("cc-element").innerHTML = elements.card;
-          document.getElementById("apple-pay-element").innerHTML = elements.applePay;
-          document.getElementById("google-pay-element").innerHTML = elements.googlePay;
+          ccEl.innerHTML = elements.card || "";
+          apEl.innerHTML = elements.applePay || "";
+          gpEl.innerHTML = elements.googlePay || "";
 
           // paymentForm.innerHTML = `
           //   <form id="blink-payment-form">
@@ -198,15 +210,15 @@
           //   </form>
           // `;
 
-          document
-            .getElementById("blink-pay-button")
-            .addEventListener("click", (e) => {
-              e.preventDefault();
-              setTimeout(() => {
-                window.location.href =
-                  "https://www.loveatfirstsign.co.uk/success";
-              }, 3000);
-            });
+          // document
+          //   .getElementById("blink-pay-button")
+          //   .addEventListener("click", (e) => {
+          //     e.preventDefault();
+          //     setTimeout(() => {
+          //       window.location.href =
+          //         "https://www.loveatfirstsign.co.uk/success";
+          //     }, 3000);
+          //   });
         } catch (err) {
           wfErr("🔥 Blink initialization failed:", err);
           paymentForm.innerHTML =
