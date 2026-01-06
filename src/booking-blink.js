@@ -213,7 +213,14 @@
 
           wfLog("elements:", elements);
           wfLog("window.ApplePaySession:", window.ApplePaySession);
-          wfLog("ApplePaySession.canMakePayments():", ApplePaySession.canMakePayments());
+          if (window.ApplePaySession) {
+            wfLog(
+              "canMakePayments:",
+              window.ApplePaySession.canMakePayments()
+            );
+          } else {
+            wfLog("Apple Pay not supported in this browser/device");
+          }
 
           injectWithScripts(apEl, elements.applePay || "");
           injectWithScripts(gpEl, elements.googlePay || "");
