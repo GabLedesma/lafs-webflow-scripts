@@ -111,11 +111,16 @@
       const qtyText = document.getElementById("qty-text");
       const totalPriceEl = document.getElementById("ticket-total-price");
 
+      let blinkInitialized = false;
+
       function renderTotals() {
         const total = unitPrice * quantity;
         qtyText.textContent = quantity;
         totalPriceEl.textContent = `£${total.toFixed(2)}`;
-        initializeBlinkPayment(total);
+        if (!blinkInitialized) {
+          initializeBlinkPayment(total);
+          blinkInitialized = true;
+        }
       }
 
       qtyMinus.onclick = () => {
@@ -140,6 +145,24 @@
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
       if (loadingSpinner) loadingSpinner.style.display = "none";
+
+      // ===============================
+      // Blink script injection
+      // ===============================
+      function injectWithScripts(container, html) {
+        container.innerHTML = html;
+
+        const scripts = container.querySelectorAll("script");
+        scripts.forEach(oldScript => {
+          const s = document.createElement("script");
+          [...oldScript.attributes].forEach(attr =>
+            s.setAttribute(attr.name, attr.value)
+          );
+          s.text = oldScript.text;
+          oldScript.replaceWith(s);
+        });
+      }
+      
 
       // ===============================
       // Blink initialization
@@ -189,10 +212,12 @@
           const { elements } = data;
 
           wfLog("elements:", elements);
+          wfLog("window.ApplePaySession:", window.ApplePaySession);
+          wfLog("ApplePaySession.canMakePayments():", ApplePaySession.canMakePayments());
 
-          ccEl.innerHTML = elements.card || "";
-          apEl.innerHTML = elements.applePay || "";
-          gpEl.innerHTML = elements.googlePay || "";
+          injectWithScripts(apEl, elements.applePay || "");
+          injectWithScripts(gpEl, elements.googlePay || "");
+          injectWithScripts(ccEl, elements.card || "");
 
           // paymentForm.innerHTML = `
           //   <form id="blink-payment-form">
