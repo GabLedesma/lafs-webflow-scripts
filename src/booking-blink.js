@@ -350,7 +350,9 @@
 
           injectWithScripts(apEl, elements.applePay || "");
           injectWithScripts(gpEl, elements.googlePay || "");
-          injectWithScripts(ccEl, elements.card || "");
+
+          // injectWithScripts(ccEl, elements.card || "");
+          ccEl.innerHTML = elements.card || "";
 
           // reloadBlinkCustomJs();
         } catch (err) {
