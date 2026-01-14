@@ -240,9 +240,7 @@ function injectWithScripts(container, html) {
 
       injectWithScripts(apEl, data.elements.applePay || "");
       injectWithScripts(gpEl, data.elements.googlePay || "");
-      
-      // ⚠️ Card HTML only — scripts handled by Blink SDK
-      ccEl.innerHTML = data.elements.card || "";
+      injectWithScripts(ccEl, data.elements.card || "");
 
       wfLog("Blink fields injected (DOM ready)");
 
