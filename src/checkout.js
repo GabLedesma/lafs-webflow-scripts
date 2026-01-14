@@ -42,7 +42,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            slug: "test-event",
+            slug: "30s-40s-singles-mixer-slug-and-lettuce-oxford-circus",
             purchaseData: { totalPrice: 1.0 }, // £1 test
           }),
         }
