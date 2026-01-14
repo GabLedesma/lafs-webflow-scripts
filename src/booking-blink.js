@@ -274,9 +274,9 @@
         }
 
         // Clear safely
-        ccEl.innerHTML = "";
-        apEl.innerHTML = "";
-        gpEl.innerHTML = "";
+        // ccEl.innerHTML = "";
+        // apEl.innerHTML = "";
+        // gpEl.innerHTML = "";
 
         const bookingData = {
           name: document.getElementById("payment-name")?.value || "",
