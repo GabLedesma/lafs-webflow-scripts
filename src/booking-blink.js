@@ -18,6 +18,7 @@
     blinkCustomApiPromise = new Promise((resolve, reject) => {
       // Already loaded safeguard
       if (window.Blink || window.blink) {
+        wfLog("Blink Custom API already present");
         resolve();
         return;
       }
@@ -35,12 +36,15 @@
         reject(new Error("Failed to load Blink Custom API"));
       };
 
-      document.head.appendChild(script);
+      // 🔑 Webflow-safe append
+      const target = document.head || document.body;
+      target.appendChild(script);
+
+      wfLog("Blink Custom API appended to", target);
     });
 
     return blinkCustomApiPromise;
   }
-
 
   document.addEventListener("DOMContentLoaded", () => {
     const paymentEl = document.getElementById("payment");
