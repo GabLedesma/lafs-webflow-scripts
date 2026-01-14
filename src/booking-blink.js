@@ -214,7 +214,7 @@
           clearTimeout(nameTimer);
           nameTimer = setTimeout(() => {
             saveBookingDraft({ name: e.target.value });
-          }, 400);
+          }, 800);
         });
       }
 
@@ -226,7 +226,7 @@
           clearTimeout(emailTimer);
           emailTimer = setTimeout(() => {
             saveBookingDraft({ email: e.target.value });
-          }, 400);
+          }, 800);
         });
       }
 
@@ -246,6 +246,19 @@
           oldScript.replaceWith(s);
         });
       }
+
+      function reloadBlinkCustomJs() {
+        const old = document.querySelector(
+          'script[src*="secure.blinkpayment.co.uk/assets/js/api/custom.js"]'
+        );
+        if (old) old.remove();
+
+        const s = document.createElement("script");
+        s.src = "https://secure.blinkpayment.co.uk/assets/js/api/custom.js";
+        s.async = false;
+        document.body.appendChild(s);
+      }
+
 
       // ===============================
       // Blink initialization
@@ -308,6 +321,8 @@
           injectWithScripts(apEl, elements.applePay || "");
           injectWithScripts(gpEl, elements.googlePay || "");
           injectWithScripts(ccEl, elements.card || "");
+
+          reloadBlinkCustomJs();
 
           // paymentForm.innerHTML = `
           //   <form id="blink-payment-form">
