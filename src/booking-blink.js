@@ -202,6 +202,7 @@
       const genderEl = document.getElementById("payment-gender");
       if (genderEl) {
         genderEl.addEventListener("change", (e) => {
+          wfLog("gender select", e.target.value);
           saveBookingDraft({ gender: e.target.value });
         });
       }
@@ -213,6 +214,7 @@
         nameEl.addEventListener("input", (e) => {
           clearTimeout(nameTimer);
           nameTimer = setTimeout(() => {
+            wfLog("name input", e.target.value);
             saveBookingDraft({ name: e.target.value });
           }, 400);
         });
@@ -225,6 +227,7 @@
         emailEl.addEventListener("input", (e) => {
           clearTimeout(emailTimer);
           emailTimer = setTimeout(() => {
+            wfLog("email input", e.target.value);
             saveBookingDraft({ email: e.target.value });
           }, 400);
         });
