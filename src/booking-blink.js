@@ -4,6 +4,7 @@
 (() => {
   wfLog("Booking Blink Payment script loadedzxc");
   let bookingSessionId = null;
+  let blinkInitialized = false;
   async function saveBookingDraft(payload) {
     if (!bookingSessionId) return;
 
@@ -131,8 +132,6 @@
       const qtyPlus = document.getElementById("qty-plus");
       const qtyText = document.getElementById("qty-text");
       const totalPriceEl = document.getElementById("ticket-total-price");
-
-      let blinkInitialized = false;
 
       function renderTotals() {
         const total = unitPrice * quantity;
@@ -367,18 +366,23 @@
   // ===============================
   // Close popup
   // ===============================
-  document.querySelectorAll(".close-popup").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const popup = document.getElementById("payment-popup");
-      popup.style.display = "none";
+  btn.addEventListener("click", () => {
+    const popup = document.getElementById("payment");
+    popup.style.display = "none";
 
-      const scrollY = document.body.style.top;
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+    const scrollY = document.body.style.top;
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
-      document.getElementById("payment").innerHTML = "";
-    });
+    bookingSessionId = null;
+    blinkInitialized = false;
+
+    popup.innerHTML = `
+      <div id="cc-element"></div>
+      <div id="apple-pay-element"></div>
+      <div id="google-pay-element"></div>
+    `;
   });
 })();
