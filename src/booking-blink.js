@@ -2,7 +2,28 @@
 // 💳 Booking – Blink Payment
 // ===============================
 (() => {
-    wfLog("Booking Blink Payment script loadedzxc");
+  wfLog("Booking Blink Payment script loadedzxc");
+  let bookingSessionId = null;
+  async function saveBookingDraft(payload) {
+    if (!bookingSessionId) return;
+
+    try {
+      await fetch(
+        "https://us-central1-cosmic-fusion.cloudfunctions.net/saveBookingDraft",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingSessionId,
+            ...payload,
+          }),
+        }
+      );
+    } catch (err) {
+      console.warn("Draft save failed:", err);
+    }
+  }
+
   document.body.addEventListener("click", async (event) => {
     const btn =
       event.target.closest(".book-button") ||
@@ -119,7 +140,7 @@
         totalPriceEl.textContent = `£${total.toFixed(2)}`;
         if (!blinkInitialized) {
           initializeBlinkPayment(total);
-          blinkInitialized = true;
+          // blinkInitialized = true;
         }
       }
 
@@ -136,6 +157,33 @@
       };
 
       // ===============================
+      // Create booking session
+      // ===============================
+      const sessionRes = await fetch(
+        "https://createbookingsession-xmismu3jga-uc.a.run.app",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug,
+            priceId: selectedPriceId,
+            unitPrice: data.price?.price || 0,
+          }),
+        }
+      );
+
+      const sessionData = await sessionRes.json();
+
+      if (!sessionRes.ok || !sessionData.bookingSessionId) {
+        alert("Failed to start booking session");
+        processingOverlay.remove();
+        return;
+      }
+
+      // 🔑 STORE SESSION ID FOR AUTOSAVE + BLINK
+      bookingSessionId = sessionData.bookingSessionId;
+
+      // ===============================
       // Show popup
       // ===============================
       processingOverlay.style.display = "none";
@@ -145,6 +193,42 @@
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
       if (loadingSpinner) loadingSpinner.style.display = "none";
+      
+      // ===============================
+      // Autosave popup form fields
+      // ===============================
+
+      // Gender
+      const genderEl = document.getElementById("payment-gender");
+      if (genderEl) {
+        genderEl.addEventListener("change", (e) => {
+          saveBookingDraft({ gender: e.target.value });
+        });
+      }
+
+      // Name (debounced)
+      const nameEl = document.getElementById("payment-name");
+      if (nameEl) {
+        let nameTimer;
+        nameEl.addEventListener("input", (e) => {
+          clearTimeout(nameTimer);
+          nameTimer = setTimeout(() => {
+            saveBookingDraft({ name: e.target.value });
+          }, 400);
+        });
+      }
+
+      // Email (debounced)
+      const emailEl = document.getElementById("payment-email");
+      if (emailEl) {
+        let emailTimer;
+        emailEl.addEventListener("input", (e) => {
+          clearTimeout(emailTimer);
+          emailTimer = setTimeout(() => {
+            saveBookingDraft({ email: e.target.value });
+          }, 400);
+        });
+      }
 
       // ===============================
       // Blink script injection
@@ -162,7 +246,6 @@
           oldScript.replaceWith(s);
         });
       }
-      
 
       // ===============================
       // Blink initialization
@@ -209,6 +292,7 @@
             return;
           }
 
+          bookingSessionId = data.bookingSessionId;
           const { elements } = data;
 
           wfLog("elements:", elements);
