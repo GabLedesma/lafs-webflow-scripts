@@ -6,19 +6,19 @@
   let bookingSessionId = null;
   let blinkInitialized = false;
 
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest("#blink-submit");
-    if (!btn) return;
+  // document.addEventListener("click", (e) => {
+  //   const btn = e.target.closest("#blink-submit");
+  //   if (!btn) return;
 
-    e.preventDefault();
+  //   e.preventDefault();
 
-    if (window.Blink && typeof window.Blink.submit === "function") {
-      wfLog("[WF] Triggering Blink.submit()");
-      window.Blink.submit();
-    } else {
-      wfErr("Blink.submit() not ready");
-    }
-  });
+  //   if (window.Blink && typeof window.Blink.submit === "function") {
+  //     wfLog("[WF] Triggering Blink.submit()");
+  //     window.Blink.submit();
+  //   } else {
+  //     wfErr("Blink.submit() not ready");
+  //   }
+  // });
 
   // ===============================
   // PREVENT DEFAULT FORM SUBMIT
