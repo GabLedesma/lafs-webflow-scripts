@@ -5,6 +5,25 @@
   wfLog("Booking Blink Payment script loadedzxc");
   let bookingSessionId = null;
   let blinkInitialized = false;
+
+  // ===============================
+  // PREVENT DEFAULT FORM SUBMIT
+  // ===============================
+  document.addEventListener("DOMContentLoaded", () => {
+    const paymentForm = document.getElementById("payment");
+    if (!paymentForm) {
+      wfErr("Payment form not found for Blink submit interception");
+      return;
+    }
+
+    paymentForm.addEventListener("submit", (e) => {
+      e.preventDefault(); // ✅ THIS IS THE KEY LINE
+      wfLog("Blink submit intercepted – allowing Blink JS to continue");
+      // DO NOTHING ELSE HERE
+    });
+  });
+
+  
   async function saveBookingDraft(payload) {
     if (!bookingSessionId) return;
 
