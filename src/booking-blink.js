@@ -364,13 +364,11 @@
   });
 
   // ===============================
-  // Close popup (FIXED)
+  // Close popup
   // ===============================
-  document.querySelectorAll(".close-popup").forEach((closeBtn) => {
-    closeBtn.addEventListener("click", () => {
+  document.querySelectorAll(".close-popup").forEach((btn) => {
+    btn.addEventListener("click", () => {
       const popup = document.getElementById("payment-popup");
-      const paymentForm = document.getElementById("payment");
-
       popup.style.display = "none";
 
       const scrollY = document.body.style.top;
@@ -382,13 +380,10 @@
       bookingSessionId = null;
       blinkInitialized = false;
 
-      // 🔑 Recreate Blink containers
-      paymentForm.innerHTML = `
-        <div id="cc-element"></div>
-        <div id="apple-pay-element"></div>
-        <div id="google-pay-element"></div>
-      `;
+      // 🔑 Clear Blink mounts ONLY
+      document.getElementById("apple-pay-element").innerHTML = "";
+      document.getElementById("google-pay-element").innerHTML = "";
+      document.getElementById("cc-element").innerHTML = "";
     });
   });
-
 })();
