@@ -23,9 +23,7 @@
       const formData = new FormData(paymentForm);
 
       for (const [key, value] of formData.entries()) {
-        if (value) {
-          wfLog(key, value);
-        }
+        if (value) wfLog(key, value);
       }
     });
   });
