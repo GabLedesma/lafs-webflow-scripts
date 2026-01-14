@@ -7,11 +7,40 @@
   let bookingSessionId = null;
   let blinkInitialized = false;
 
-  async function waitForBlink() {
-    if (window.__blinkBootPromise) {
-      await window.__blinkBootPromise;
-    }
+  // ===============================
+  // Blink Custom API Lazy Loader
+  // ===============================
+  let blinkCustomApiPromise = null;
+
+  function loadBlinkCustomApi() {
+    if (blinkCustomApiPromise) return blinkCustomApiPromise;
+
+    blinkCustomApiPromise = new Promise((resolve, reject) => {
+      // Already loaded safeguard
+      if (window.Blink || window.blink) {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://secure.blinkpayment.co.uk/assets/js/api/custom.js";
+      script.async = true;
+
+      script.onload = () => {
+        wfLog("Blink Custom API loaded");
+        resolve();
+      };
+
+      script.onerror = () => {
+        reject(new Error("Failed to load Blink Custom API"));
+      };
+
+      document.head.appendChild(script);
+    });
+
+    return blinkCustomApiPromise;
   }
+
 
   document.addEventListener("DOMContentLoaded", () => {
     const paymentEl = document.getElementById("payment");
@@ -230,6 +259,9 @@ function injectWithScripts(container, html) {
     }
 
     try {
+      // 🔑 Load Blink Custom API only when needed
+      await loadBlinkCustomApi();
+
       const res = await fetch(
         "https://createblinkintent-xmismu3jga-uc.a.run.app",
         {
