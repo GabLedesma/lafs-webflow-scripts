@@ -22,6 +22,54 @@
       }
     }
 
+    // ---------- Populate City with Groups ----------
+    if (selectCity) {
+      selectCity.innerHTML = `<option value="">Select City</option>`;
+
+      const cities = {
+        US: [
+          { label: "New York", value: "/new-york" },
+          { label: "Los Angeles", value: "/los-angeles" }
+        ],
+        UK: [
+          { label: "Birmingham", value: "/birmingham" },
+          { label: "Bournemouth", value: "/bournemouth" },
+          { label: "Brighton", value: "/brighton" },
+          { label: "Bristol", value: "/bristol" },
+          { label: "Cambridge", value: "/cambridge" },
+          { label: "Cardiff", value: "/cardiff" },
+          { label: "Edinburgh", value: "/edinburgh" },
+          { label: "Glasgow", value: "/glasgow" },
+          { label: "Guildford", value: "/guildford" },
+          { label: "Leeds", value: "/leeds" },
+          { label: "London", value: "/london" },
+          { label: "Manchester", value: "/manchester" },
+          { label: "Newcastle", value: "/newcastle" },
+          { label: "Nottingham", value: "/nottingham" },
+          { label: "Southampton", value: "/southampton" },
+          { label: "Winchester", value: "/winchester" },
+
+          // ✅ Special categories (as per your Webflow values)
+          { label: "Party 🎉", value: "/parties" },
+          { label: "LGBTQ+ 🌈", value: "/lgbtq" }
+        ]
+      };
+
+      Object.entries(cities).forEach(([country, list]) => {
+        const group = document.createElement("optgroup");
+        group.label = country;
+
+        list.forEach(item => {
+          const opt = document.createElement("option");
+          opt.value = item.value;
+          opt.textContent = item.label;
+          group.appendChild(opt);
+        });
+
+        selectCity.appendChild(group);
+      });
+    }
+
     goButton?.addEventListener("click", () => {
       const month = selectMonth?.value;
       const city = selectCity?.value;
