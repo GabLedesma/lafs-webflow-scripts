@@ -10,24 +10,31 @@
   // PREVENT DEFAULT FORM SUBMIT
   // ===============================
   document.addEventListener("DOMContentLoaded", () => {
-    const paymentForm = document.getElementById("payment");
-    if (!paymentForm) {
-      wfErr("Payment form not found for Blink submit interception");
+    const paymentEl = document.getElementById("payment");
+
+    if (!paymentEl) {
+      wfErr("Payment element not found");
+      return;
+    }
+
+    // 🔑 THIS IS THE FIX
+    const paymentForm = paymentEl.closest("form");
+
+    if (!(paymentForm instanceof HTMLFormElement)) {
+      wfErr("Payment form not found or #payment is not inside a form");
       return;
     }
 
     paymentForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      wfLog("Blink submit intercepted – allowing Blink JS to continue");
+      wfLog("[WF] Blink submit intercepted – allowing Blink JS to continue");
 
       const formData = new FormData(paymentForm);
-
       for (const [key, value] of formData.entries()) {
         if (value) wfLog(key, value);
       }
     });
   });
-
 
   async function saveBookingDraft(payload) {
     if (!bookingSessionId) return;
