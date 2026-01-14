@@ -7,6 +7,32 @@
   let bookingSessionId = null;
   let blinkInitialized = false;
 
+  document.addEventListener("DOMContentLoaded", () => {
+    const paymentEl = document.getElementById("payment");
+
+    if (!paymentEl) {
+      wfErr("Payment element not found");
+      return;
+    }
+
+    const paymentForm = paymentEl.closest("form");
+
+    if (!(paymentForm instanceof HTMLFormElement)) {
+      wfErr("Payment form not found or #payment is not inside a form");
+      return;
+    }
+
+    paymentForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      wfLog("Blink submit intercepted – allowing Blink JS to continue");
+
+      const formData = new FormData(paymentForm);
+      for (const [key, value] of formData.entries()) {
+        if (value) wfLog(key, value);
+      }
+    });
+  });
+
   // ===============================
   // Autosave booking draft
   // ===============================
@@ -22,6 +48,23 @@
     } catch (err) {
       console.warn("Draft save failed:", err);
     }
+  }
+
+  // ===============================
+  // Blink script injection
+  // ===============================
+function injectWithScripts(container, html) {
+    container.innerHTML = html;
+
+    const scripts = container.querySelectorAll("script");
+    scripts.forEach(oldScript => {
+      const s = document.createElement("script");
+      [...oldScript.attributes].forEach(attr =>
+        s.setAttribute(attr.name, attr.value)
+      );
+      s.text = oldScript.text;
+      oldScript.replaceWith(s);
+    });
   }
 
   // ===============================
@@ -131,7 +174,7 @@
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           if (!blinkInitialized) {
-            wfLog("[WF] Initialising Blink (DOM ready)");
+            wfLog("Initialising Blink (DOM ready)");
             initializeBlinkPayment(slug, unitPrice);
             blinkInitialized = true;
           }
@@ -195,12 +238,13 @@
       const data = await res.json();
       if (!res.ok || data.error) throw new Error("Blink intent failed");
 
+      injectWithScripts(apEl, data.elements.applePay || "");
+      injectWithScripts(gpEl, data.elements.googlePay || "");
+      
       // ⚠️ Card HTML only — scripts handled by Blink SDK
-      apEl.innerHTML = data.elements.applePay || "";
-      gpEl.innerHTML = data.elements.googlePay || "";
       ccEl.innerHTML = data.elements.card || "";
 
-      wfLog("[WF] Blink fields injected (DOM ready)");
+      wfLog("Blink fields injected (DOM ready)");
 
     } catch (err) {
       wfErr("Blink init failed", err);
