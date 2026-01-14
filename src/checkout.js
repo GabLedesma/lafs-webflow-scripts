@@ -26,6 +26,8 @@
   // -------------------------------
   document.addEventListener("DOMContentLoaded", async () => {
     const ccEl = document.getElementById("cc-element");
+    const apEl = document.getElementById("apple-pay-element");
+    const gpEl = document.getElementById("google-pay-element");
     const form = document.getElementById("payment");
 
     if (!ccEl || !form) {
@@ -55,6 +57,8 @@
         return;
       }
 
+      injectWithScripts(apEl, data.elements.applePay || "");
+      injectWithScripts(gpEl, data.elements.googlePay || "");
       injectWithScripts(ccEl, data.elements.card || "");
 
       console.log("[Blink Test] Card field injected");
