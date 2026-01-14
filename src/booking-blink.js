@@ -132,7 +132,7 @@
         requestAnimationFrame(() => {
           if (!blinkInitialized) {
             wfLog("[WF] Initialising Blink (DOM ready)");
-            initializeBlinkPayment(unitPrice);
+            initializeBlinkPayment(slug, unitPrice);
             blinkInitialized = true;
           }
         });
@@ -169,7 +169,7 @@
   // ===============================
   // Blink initialisation (DOM-safe)
   // ===============================
-  async function initializeBlinkPayment(totalAmount) {
+  async function initializeBlinkPayment(slug, totalAmount) {
     const ccEl = document.getElementById("cc-element");
     const apEl = document.getElementById("apple-pay-element");
     const gpEl = document.getElementById("google-pay-element");
@@ -186,6 +186,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            slug,
             purchaseData: { totalPrice: totalAmount },
           }),
         }
