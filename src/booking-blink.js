@@ -7,6 +7,12 @@
   let bookingSessionId = null;
   let blinkInitialized = false;
 
+  async function waitForBlink() {
+    if (window.__blinkBootPromise) {
+      await window.__blinkBootPromise;
+    }
+  }
+
   // document.addEventListener("DOMContentLoaded", () => {
   //   const paymentEl = document.getElementById("payment");
 
@@ -172,9 +178,10 @@ function injectWithScripts(container, html) {
       // 🔑 WAIT FOR WEBFLOW TO FINISH RENDERING
       // ===============================
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
           if (!blinkInitialized) {
             wfLog("Initialising Blink (DOM ready)");
+            await waitForBlink();
             initializeBlinkPayment(slug, unitPrice);
             blinkInitialized = true;
           }
