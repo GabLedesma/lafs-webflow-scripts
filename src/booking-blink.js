@@ -381,9 +381,9 @@
       blinkInitialized = false;
 
       // 🔑 Clear Blink mounts ONLY
-      document.getElementById("apple-pay-element").innerHTML = "";
-      document.getElementById("google-pay-element").innerHTML = "";
-      document.getElementById("cc-element").innerHTML = "";
+      // document.getElementById("apple-pay-element").innerHTML = "";
+      // document.getElementById("google-pay-element").innerHTML = "";
+      // document.getElementById("cc-element").innerHTML = "";
     });
   });
 })();
