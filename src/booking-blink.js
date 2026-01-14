@@ -338,6 +338,7 @@
           const { elements } = data;
 
           wfLog("elements:", elements);
+          wfLog("ccElement:", elements.card);
           wfLog("window.ApplePaySession:", window.ApplePaySession);
           if (window.ApplePaySession) {
             wfLog(
