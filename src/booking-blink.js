@@ -9,21 +9,18 @@
   // ===============================
   // PREVENT DEFAULT FORM SUBMIT
   // ===============================
-  document.addEventListener("DOMContentLoaded", () => {
-    const paymentForm = document.getElementById("payment");
-    if (!paymentForm) {
-      wfErr("Payment form not found for Blink submit interception");
-      return;
-    }
+  // document.addEventListener("DOMContentLoaded", () => {
+  //   const paymentForm = document.getElementById("payment");
+  //   if (!paymentForm) {
+  //     wfErr("Payment form not found for Blink submit interception");
+  //     return;
+  //   }
 
-    paymentForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      wfLog("Blink submit intercepted – allowing Blink JS to continue");
-      paymentForm.dispatchEvent(
-        new Event("submit", { bubbles: true, cancelable: true })
-      );
-    });
-  });
+  //   paymentForm.addEventListener("submit", (e) => {
+  //     e.preventDefault();
+  //     wfLog("Blink submit intercepted – allowing Blink JS to continue");
+  //   });
+  // });
 
 
   async function saveBookingDraft(payload) {
