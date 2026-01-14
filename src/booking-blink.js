@@ -364,25 +364,31 @@
   });
 
   // ===============================
-  // Close popup
+  // Close popup (FIXED)
   // ===============================
-  btn.addEventListener("click", () => {
-    const popup = document.getElementById("payment");
-    popup.style.display = "none";
+  document.querySelectorAll(".close-popup").forEach((closeBtn) => {
+    closeBtn.addEventListener("click", () => {
+      const popup = document.getElementById("payment-popup");
+      const paymentForm = document.getElementById("payment");
 
-    const scrollY = document.body.style.top;
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.width = "";
-    window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      popup.style.display = "none";
 
-    bookingSessionId = null;
-    blinkInitialized = false;
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
-    popup.innerHTML = `
-      <div id="cc-element"></div>
-      <div id="apple-pay-element"></div>
-      <div id="google-pay-element"></div>
-    `;
+      bookingSessionId = null;
+      blinkInitialized = false;
+
+      // 🔑 Recreate Blink containers
+      paymentForm.innerHTML = `
+        <div id="cc-element"></div>
+        <div id="apple-pay-element"></div>
+        <div id="google-pay-element"></div>
+      `;
+    });
   });
+
 })();
