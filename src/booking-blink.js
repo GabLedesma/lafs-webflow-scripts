@@ -181,7 +181,7 @@ function injectWithScripts(container, html) {
         requestAnimationFrame(async () => {
           if (!blinkInitialized) {
             wfLog("Initialising Blink (DOM ready)");
-            await waitForBlink();
+            // await waitForBlink();
             initializeBlinkPayment(slug, unitPrice);
             blinkInitialized = true;
           }
