@@ -6,35 +6,49 @@
   let bookingSessionId = null;
   let blinkInitialized = false;
 
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#blink-submit");
+    if (!btn) return;
+
+    e.preventDefault();
+
+    if (window.Blink && typeof window.Blink.submit === "function") {
+      wfLog("[WF] Triggering Blink.submit()");
+      window.Blink.submit();
+    } else {
+      wfErr("Blink.submit() not ready");
+    }
+  });
+
   // ===============================
   // PREVENT DEFAULT FORM SUBMIT
   // ===============================
-  document.addEventListener("DOMContentLoaded", () => {
-    const paymentEl = document.getElementById("payment");
+  // document.addEventListener("DOMContentLoaded", () => {
+  //   const paymentEl = document.getElementById("payment");
 
-    if (!paymentEl) {
-      wfErr("Payment element not found");
-      return;
-    }
+  //   if (!paymentEl) {
+  //     wfErr("Payment element not found");
+  //     return;
+  //   }
 
-    // 🔑 THIS IS THE FIX
-    const paymentForm = paymentEl.closest("form");
+  //   // 🔑 THIS IS THE FIX
+  //   const paymentForm = paymentEl.closest("form");
 
-    if (!(paymentForm instanceof HTMLFormElement)) {
-      wfErr("Payment form not found or #payment is not inside a form");
-      return;
-    }
+  //   if (!(paymentForm instanceof HTMLFormElement)) {
+  //     wfErr("Payment form not found or #payment is not inside a form");
+  //     return;
+  //   }
 
-    paymentForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      wfLog("[WF] Blink submit intercepted – allowing Blink JS to continue");
+  //   paymentForm.addEventListener("submit", (e) => {
+  //     e.preventDefault();
+  //     wfLog("[WF] Blink submit intercepted – allowing Blink JS to continue");
 
-      const formData = new FormData(paymentForm);
-      for (const [key, value] of formData.entries()) {
-        if (value) wfLog(key, value);
-      }
-    });
-  });
+  //     const formData = new FormData(paymentForm);
+  //     for (const [key, value] of formData.entries()) {
+  //       if (value) wfLog(key, value);
+  //     }
+  //   });
+  // });
 
   async function saveBookingDraft(payload) {
     if (!bookingSessionId) return;
