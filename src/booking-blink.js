@@ -9,18 +9,26 @@
   // ===============================
   // PREVENT DEFAULT FORM SUBMIT
   // ===============================
-  // document.addEventListener("DOMContentLoaded", () => {
-  //   const paymentForm = document.getElementById("payment");
-  //   if (!paymentForm) {
-  //     wfErr("Payment form not found for Blink submit interception");
-  //     return;
-  //   }
+  document.addEventListener("DOMContentLoaded", () => {
+    const paymentForm = document.getElementById("payment");
+    if (!paymentForm) {
+      wfErr("Payment form not found for Blink submit interception");
+      return;
+    }
 
-  //   paymentForm.addEventListener("submit", (e) => {
-  //     e.preventDefault();
-  //     wfLog("Blink submit intercepted – allowing Blink JS to continue");
-  //   });
-  // });
+    paymentForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      wfLog("Blink submit intercepted – allowing Blink JS to continue");
+
+      const formData = new FormData(paymentForm);
+
+      for (const [key, value] of formData.entries()) {
+        if (value) {
+          wfLog(key, value);
+        }
+      }
+    });
+  });
 
 
   async function saveBookingDraft(payload) {
@@ -340,32 +348,6 @@
           injectWithScripts(ccEl, elements.card || "");
 
           // reloadBlinkCustomJs();
-
-          // paymentForm.innerHTML = `
-          //   <form id="blink-payment-form">
-          //     <div id="blink-gpay" style="margin-top:12px;">${elements.googlePay || ""}</div>
-          //     <div id="blink-applepay" style="margin-top:12px;">${elements.applePay || ""}</div>
-          //     <div id="blink-card">${elements.card || ""}</div>
-
-          //     <div style="text-align:center;margin-top:20px;">
-          //       <button id="blink-pay-button"
-          //         style="background:#3C2AE7;color:#fff;border:none;
-          //         border-radius:12px;padding:12px 24px;font-size:16px;cursor:pointer;">
-          //         Pay Now
-          //       </button>
-          //     </div>
-          //   </form>
-          // `;
-
-          // document
-          //   .getElementById("blink-pay-button")
-          //   .addEventListener("click", (e) => {
-          //     e.preventDefault();
-          //     setTimeout(() => {
-          //       window.location.href =
-          //         "https://www.loveatfirstsign.co.uk/success";
-          //     }, 3000);
-          //   });
         } catch (err) {
           wfErr("🔥 Blink initialization failed:", err);
           paymentForm.innerHTML =
