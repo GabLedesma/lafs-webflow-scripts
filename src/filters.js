@@ -28,10 +28,11 @@
 
       const cities = {
         US: [
-          { label: "New York", value: "/new-york" },
-          { label: "Los Angeles", value: "/los-angeles" }
+          { label: "Los Angeles", value: "/los-angeles" },
+          { label: "New York", value: "/new-york" }
         ],
         UK: [
+          { label: "Bath", value: "/bath" },
           { label: "Birmingham", value: "/birmingham" },
           { label: "Bournemouth", value: "/bournemouth" },
           { label: "Brighton", value: "/brighton" },
@@ -41,15 +42,19 @@
           { label: "Edinburgh", value: "/edinburgh" },
           { label: "Glasgow", value: "/glasgow" },
           { label: "Guildford", value: "/guildford" },
+          { label: "Leamington Spa", value: "/leamington-spa" },
           { label: "Leeds", value: "/leeds" },
+          { label: "Leicester", value: "/leicester" },
           { label: "London", value: "/london" },
           { label: "Manchester", value: "/manchester" },
           { label: "Newcastle", value: "/newcastle" },
           { label: "Nottingham", value: "/nottingham" },
+          { label: "Reading", value: "/reading" },
+          { label: "Sheffield", value: "/sheffield" },
           { label: "Southampton", value: "/southampton" },
           { label: "Winchester", value: "/winchester" },
 
-          // ✅ Special categories (as per your Webflow values)
+          // Special categories (intentionally last)
           { label: "Party 🎉", value: "/parties" },
           { label: "LGBTQ+ 🌈", value: "/lgbtq" }
         ]
