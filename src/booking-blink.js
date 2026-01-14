@@ -294,8 +294,7 @@
               "<div style='color:red;text-align:center;'>Payment could not be initialized.</div>";
             return;
           }
-
-          bookingSessionId = data.bookingSessionId;
+          
           const { elements } = data;
 
           wfLog("elements:", elements);
