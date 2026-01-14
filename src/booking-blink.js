@@ -9,21 +9,20 @@
   // ===============================
   // PREVENT DEFAULT FORM SUBMIT
   // ===============================
-  document.addEventListener("DOMContentLoaded", () => {
-    const paymentForm = document.getElementById("payment");
-    if (!paymentForm) {
-      wfErr("Payment form not found for Blink submit interception");
-      return;
-    }
+  // document.addEventListener("DOMContentLoaded", () => {
+  //   const paymentForm = document.getElementById("payment");
+  //   if (!paymentForm) {
+  //     wfErr("Payment form not found for Blink submit interception");
+  //     return;
+  //   }
 
-    paymentForm.addEventListener("submit", (e) => {
-      e.preventDefault(); // ✅ THIS IS THE KEY LINE
-      wfLog("Blink submit intercepted – allowing Blink JS to continue");
-      // DO NOTHING ELSE HERE
-    });
-  });
+  //   paymentForm.addEventListener("submit", (e) => {
+  //     e.preventDefault();
+  //     wfLog("Blink submit intercepted – allowing Blink JS to continue");
+  //   });
+  // });
 
-  
+
   async function saveBookingDraft(payload) {
     if (!bookingSessionId) return;
 
@@ -340,7 +339,7 @@
           injectWithScripts(gpEl, elements.googlePay || "");
           injectWithScripts(ccEl, elements.card || "");
 
-          reloadBlinkCustomJs();
+          // reloadBlinkCustomJs();
 
           // paymentForm.innerHTML = `
           //   <form id="blink-payment-form">
