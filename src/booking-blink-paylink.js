@@ -420,44 +420,66 @@
           return; // Stop execution
         }
 
+        const orderId = window.crypto.randomUUID();
+
         try {
-          const response = await fetch("https://us-central1-cosmic-fusion.cloudfunctions.net/createBookingDraft", {
+            const response = await fetch("https://createbookingdraft-xmismu3jga-uc.a.run.app", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              eventData: {
-                eventId: eventData.eventId,
+                orderId,
+                eventData: {
+                eventId: eventInfo.eventId,
                 eventCity,
                 eventDate,
                 slug,
                 venueAddress,
                 venueName,
-              },
-              purchaseData: {
+                },
+                purchaseData: {
                 amount: finalTotalPrice,
                 currency: "GBP",
                 priceId: selectedPriceId,
                 promoCode: promoState?.code || "N/A",
                 quantity,
-              },
-              userDetails: {
+                },
+                userDetails: {
                 name: userName,
                 email: userEmail,
                 gender: userGender,
                 phone: userPhone,
-              },
+                },
             }),
-          });
+            });
 
-          const data = await response.json();
-          if (!response.ok) {
-            wfErr("🔥 Error creating booking draft:", data.error);
-            alert("Error creating payment: " + data.error);
-            processingOverlay.style.display = "none";
-            return;
-          }
+            const data = await response.json();
+            if (!response.ok) {
+                wfErr("🔥 Error creating booking draft:", data.error);
+                alert("Error creating payment: " + data.error);
+                processingOverlay.style.display = "none";
+                return;
+            }
 
-        //   window.location.href = data.url;
+            // 2️⃣ Create Blink Paylink
+            const paylinkRes = await fetch(
+            "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId }),
+            }
+            );
+
+            const paylinkData = await paylinkRes.json();
+            if (!paylinkRes.ok) {
+                wfErr("🔥 Error creating blink paylink:", paylinkData.error);
+                alert("Error creating payment: " + paylinkData.error);
+                processingOverlay.style.display = "none";
+                return;
+            }
+
+            // 3️⃣ Redirect to Blink
+            window.location.href = paylinkData.url;
         } catch (err) {
           alert("Something went wrong processing your payment: " + (err.message || err));
         } finally {
