@@ -424,32 +424,35 @@
 
         try {
             const response = await fetch("https://createbookingdraft-xmismu3jga-uc.a.run.app", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                orderId,
-                eventData: {
-                eventId: eventInfo.eventId,
-                eventCity,
-                eventDate,
-                slug,
-                venueAddress,
-                venueName,
-                },
-                purchaseData: {
-                amount: finalTotalPrice,
-                currency: "GBP",
-                priceId: selectedPriceId,
-                promoCode: promoState?.code || "N/A",
-                quantity,
-                },
-                userDetails: {
-                name: userName,
-                email: userEmail,
-                gender: userGender,
-                phone: userPhone,
-                },
-            }),
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    orderId,
+                    eventData: {
+                        eventId: eventInfo.eventId,
+                        eventName,
+                        eventCity,
+                        eventDate,
+                        slug,
+                        venueAddress,
+                        venueName,
+                        ageRange,
+                    },
+                    purchaseData: {
+                        amount: finalTotalPrice,
+                        currency: "GBP",
+                        priceId: selectedPriceId,
+                        promoCode: promoState?.code || "N/A",
+                        quantity,
+                        hearAbout: hearSelect,
+                    },
+                    userDetails: {
+                        name: userName,
+                        email: userEmail,
+                        gender: userGender,
+                        phone: userPhone,
+                    },
+                }),
             });
 
             const data = await response.json();
