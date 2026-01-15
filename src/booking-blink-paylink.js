@@ -2,6 +2,7 @@
 // 🎟️ Booking + Payment
 // ===============================
 (() => {
+    wfLog("Booking Blink Paylink script loaded");
   function refreshGenderSelect(maleTicketsAvailable, femaleTicketsAvailable) {
     const genderSelect = document.getElementById("payment-gender");
     if (!genderSelect) return;
