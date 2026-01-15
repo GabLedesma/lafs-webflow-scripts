@@ -34,8 +34,6 @@
   }
 
   document.body.addEventListener("click", async (event) => {
-    const testBtn = event.target.closest("#book-test-button");
-    if(testBtn) return;
     const btn = event.target.closest(".book-button") || event.target.closest("#event-book-now") || event.target.closest(".featured-event-book-btn");
     if (!btn) return;
     event.preventDefault();
