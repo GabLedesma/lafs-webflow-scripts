@@ -18,6 +18,24 @@
       titleEl.textContent = `${gender} tickets are sold out`;
     }
 
+    const qtyMinus = document.getElementById("waitlist-qty-minus");
+    const qtyPlus = document.getElementById("waitlist-qty-plus");
+    const qtyText = document.getElementById("waitlist-qty-text");
+
+    let quantity = 1;
+
+    qtyMinus.onclick = () => {
+      if (quantity > 1) {
+        quantity--;
+        qtyText.textContent = quantity;
+      }
+    };
+
+    qtyPlus.onclick = () => {
+      quantity++;
+      qtyText.textContent = quantity;
+    };
+
     // Hide checkout popup to prevent overlap
     if (checkoutPopup) checkoutPopup.style.display = "none";
 
@@ -102,8 +120,6 @@
 
       const eventInfo = eventData.event;
       const priceInfo = eventData.price;
-
-      
 
       let ticketPerGender = eventInfo.ticketPerGender;
       if (
@@ -493,9 +509,9 @@
         return;
       }
 
-      const name = document.getElementById("payment-name").value.trim();
-      const email = document.getElementById("payment-email").value.trim();
-      const phone = document.getElementById("payment-phone").value.trim();
+      const name = document.getElementById("waitlist-payment-name").value.trim();
+      const email = document.getElementById("waitlist-payment-email").value.trim();
+      const phone = document.getElementById("waitlist-payment-phone").value.trim();
 
       const quantity = Number(
         document.getElementById("waitlist-qty-text").textContent || 1
