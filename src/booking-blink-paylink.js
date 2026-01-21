@@ -2,35 +2,27 @@
 // 🎟️ Booking + Payment
 // ===============================
 (() => {
-    wfLog("Booking Blink Paylink script loaded");
-  function refreshGenderSelect(maleTicketsAvailable, femaleTicketsAvailable) {
-    const genderSelect = document.getElementById("payment-gender");
-    if (!genderSelect) return;
+  wfLog("Booking Blink Paylink script loaded");
 
-    // Reset + normalize all options first
-    genderSelect.querySelectorAll("option").forEach(opt => {
-      // Remove any existing (SOLD OUT) text safely
-      opt.textContent = opt.textContent.replace(/\s*\(SOLD OUT\)$/i, "");
-      opt.disabled = false;
-    });
+  function openWaitlistPopup(gender) {
+    const waitlistPopup = document.getElementById("payment-popup-waitlist");
+    const checkoutPopup = document.getElementById("payment-popup");
+    const titleEl = document.getElementById("waitlist-title");
 
-    // Apply SOLD OUT to Male
-    if (maleTicketsAvailable <= 0) {
-      const maleOption = genderSelect.querySelector('option[value="Male"]');
-      if (maleOption && !maleOption.textContent.includes("(SOLD OUT)")) {
-        maleOption.textContent += " (SOLD OUT)";
-        maleOption.disabled = true;
-      }
+    if (titleEl) {
+      titleEl.textContent = `${gender} tickets are sold out`;
     }
 
-    // Apply SOLD OUT to Female
-    if (femaleTicketsAvailable <= 0) {
-      const femaleOption = genderSelect.querySelector('option[value="Female"]');
-      if (femaleOption && !femaleOption.textContent.includes("(SOLD OUT)")) {
-        femaleOption.textContent += " (SOLD OUT)";
-        femaleOption.disabled = true;
-      }
-    }
+    // Hide checkout popup to prevent overlap
+    if (checkoutPopup) checkoutPopup.style.display = "none";
+
+    // Show waitlist popup
+    if (waitlistPopup) waitlistPopup.style.display = "flex";
+
+    // Lock background scroll
+    document.body.style.top = `-${window.scrollY}px`;
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
   }
 
   document.body.addEventListener("click", async (event) => {
@@ -137,9 +129,24 @@
       const genderSelect = document.getElementById("payment-gender");
       const eventDetails = document.getElementById("event-details");
 
+      genderSelect.addEventListener("change", (e) => {
+        const selectedGender = e.target.value;
+
+        if (selectedGender === "Male" && maleTicketsAvailable <= 0) {
+          openWaitlistPopup("Male");
+          genderSelect.value = "";
+          return;
+        }
+
+        if (selectedGender === "Female" && femaleTicketsAvailable <= 0) {
+          openWaitlistPopup("Female");
+          genderSelect.value = "";
+          return;
+        }
+      });
+
       // Reset selected value
       genderSelect.value = "";
-      refreshGenderSelect(maleTicketsAvailable, femaleTicketsAvailable);
       
       let ticketsAvailable = 0;
 
@@ -496,28 +503,40 @@
     }
   });
 
-  // Close popup
-  document.querySelectorAll(".close-popup").forEach(btn => {
-    // Re-select the popup + form for this script
-    const popup = document.getElementById("payment-popup");
-    const paymentForm = document.getElementById("payment");
-    
-    document.querySelectorAll(".close-popup").forEach(btn => {
-      btn.addEventListener("click", () => {
+  document.querySelectorAll("#payment-popup-waitlist .close-popup").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const scrollY = document.body.style.top;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
-        // Re-enable background scroll
-        const scrollY = document.body.style.top;
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.width = "";
-        window.scrollTo(0, parseInt(scrollY || "0") * -1);
-
-        // Close popup
-        popup.style.display = "none";
-
-        // Optional: reset form contents
-        paymentForm.innerHTML = "";
-      });
+      document.getElementById("payment-popup-waitlist").style.display = "none";
     });
   });
+
+  // // Close popup
+  // document.querySelectorAll(".close-popup").forEach(btn => {
+  //   // Re-select the popup + form for this script
+  //   const popup = document.getElementById("payment-popup");
+  //   const paymentForm = document.getElementById("payment");
+    
+  //   document.querySelectorAll(".close-popup").forEach(btn => {
+  //     btn.addEventListener("click", () => {
+
+  //       // Re-enable background scroll
+  //       const scrollY = document.body.style.top;
+  //       document.body.style.position = "";
+  //       document.body.style.top = "";
+  //       document.body.style.width = "";
+  //       window.scrollTo(0, parseInt(scrollY || "0") * -1);
+
+  //       // Close popup
+  //       popup.style.display = "none";
+
+  //       // Optional: reset form contents
+  //       paymentForm.innerHTML = "";
+  //     });
+  //   });
+  // });
 })();
