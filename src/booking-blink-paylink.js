@@ -150,34 +150,6 @@
       
       let ticketsAvailable = 0;
 
-      // 🔥 remove options based on availability (duplicate-proof)
-      if (genderSelect) {
-
-        // First: reset all options (remove existing SOLD OUT labels)
-        genderSelect.querySelectorAll("option").forEach(opt => {
-          opt.disabled = false;
-          opt.textContent = opt.textContent.replace(/\s*\(SOLD OUT\)/gi, "");
-        });
-
-        // Disable Male if sold out
-        if (maleTicketsAvailable <= 0) {
-          const maleOption = genderSelect.querySelector('option[value="Male"]');
-          if (maleOption) {
-            maleOption.disabled = true;
-            maleOption.textContent += " (SOLD OUT)";
-          }
-        }
-
-        // Disable Female if sold out
-        if (femaleTicketsAvailable <= 0) {
-          const femaleOption = genderSelect.querySelector('option[value="Female"]');
-          if (femaleOption) {
-            femaleOption.disabled = true;
-            femaleOption.textContent += " (SOLD OUT)";
-          }
-        }
-      }
-
       genderSelect.addEventListener("change", (e) => {
         const value = e.target.value;
         console.log("Selected:", value);
