@@ -137,6 +137,7 @@
 
       genderSelect.addEventListener("change", (e) => {
         const selectedGender = e.target.value;
+        console.log("Selected:", selectedGender);
 
         if (selectedGender === "Male" && maleTicketsAvailable <= 0) {
           openWaitlistPopup("Male");
@@ -155,11 +156,6 @@
       genderSelect.value = "";
       
       let ticketsAvailable = 0;
-
-      genderSelect.addEventListener("change", (e) => {
-        const value = e.target.value;
-        console.log("Selected:", value);
-      });
 
       eventDetails.addEventListener("click", (e) => {
         const gender = genderSelect.value;
@@ -565,28 +561,27 @@
     });
   });
 
-  // // Close popup
-  // document.querySelectorAll(".close-popup").forEach(btn => {
-  //   // Re-select the popup + form for this script
-  //   const popup = document.getElementById("payment-popup");
-  //   const paymentForm = document.getElementById("payment");
+  document.querySelectorAll(".close-popup").forEach(btn => {
+    // Re-select the popup + form for this script
+    const popup = document.getElementById("payment-popup");
+    const paymentForm = document.getElementById("payment");
     
-  //   document.querySelectorAll(".close-popup").forEach(btn => {
-  //     btn.addEventListener("click", () => {
+    document.querySelectorAll(".close-popup").forEach(btn => {
+      btn.addEventListener("click", () => {
 
-  //       // Re-enable background scroll
-  //       const scrollY = document.body.style.top;
-  //       document.body.style.position = "";
-  //       document.body.style.top = "";
-  //       document.body.style.width = "";
-  //       window.scrollTo(0, parseInt(scrollY || "0") * -1);
+        // Re-enable background scroll
+        const scrollY = document.body.style.top;
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
-  //       // Close popup
-  //       popup.style.display = "none";
+        // Close popup
+        popup.style.display = "none";
 
-  //       // Optional: reset form contents
-  //       paymentForm.innerHTML = "";
-  //     });
-  //   });
-  // });
+        // Optional: reset form contents
+        paymentForm.innerHTML = "";
+      });
+    });
+  });
 })();
