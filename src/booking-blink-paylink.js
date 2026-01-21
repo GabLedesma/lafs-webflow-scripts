@@ -4,7 +4,12 @@
 (() => {
   wfLog("Booking Blink Paylink script loaded");
 
+  let currentEventSlug = null;
+  let currentWaitlistGender = null;
+
   function openWaitlistPopup(gender) {
+    currentWaitlistGender = gender;
+
     const waitlistPopup = document.getElementById("payment-popup-waitlist");
     const checkoutPopup = document.getElementById("payment-popup");
     const titleEl = document.getElementById("waitlist-title");
@@ -20,9 +25,9 @@
     if (waitlistPopup) waitlistPopup.style.display = "flex";
 
     // Lock background scroll
-    document.body.style.top = `-${window.scrollY}px`;
-    document.body.style.position = "fixed";
-    document.body.style.width = "100%";
+    // document.body.style.top = `-${window.scrollY}px`;
+    // document.body.style.position = "fixed";
+    // document.body.style.width = "100%";
   }
 
   document.body.addEventListener("click", async (event) => {
@@ -49,6 +54,7 @@
     // Extract CMS data
     const cardItem = btn.closest("[role='listitem']") || document.querySelector('.container-large.events') || btn.closest('.featured-event') || "";
     const slug = cardItem.getAttribute("data-event-id");
+    currentEventSlug = slug;
     const eventName = cardItem.getAttribute("data-event-name");
     const eventDate = cardItem.getAttribute("data-event-date");
     const eventCity = cardItem.getAttribute("data-event-city");
@@ -474,6 +480,78 @@
       paymentForm.innerHTML = `<div style="color:red;text-align:center;">Something went wrong initializing payment.</div>`;
     }
   });
+
+  const waitlistBtn = document.getElementById("waitlist-button");
+
+  if (waitlistBtn) {
+    waitlistBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      if (!currentEventSlug) {
+        alert("Missing event reference. Please refresh the page.");
+        return;
+      }
+
+      if (!currentWaitlistGender) {
+        alert("Missing gender reference. Please try again.");
+        return;
+      }
+
+      const name = document.getElementById("payment-name").value.trim();
+      const email = document.getElementById("payment-email").value.trim();
+      const phone = document.getElementById("payment-phone").value.trim();
+
+      const quantity = Number(
+        document.getElementById("waitlist-qty-text").textContent || 1
+      );
+
+      if (!name || !email) {
+        alert("Please enter your name and email.");
+        return;
+      }
+
+      waitlistBtn.disabled = true;
+      waitlistBtn.textContent = "Joining waitlist...";
+
+      try {
+        const res = await fetch(
+          "https://joinwaitlist-xmismu3jga-uc.a.run.app",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              slug: currentEventSlug,
+              name,
+              email,
+              phone,
+              gender: currentWaitlistGender, // ✅ SAFE
+              quantity,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || "Failed to join waitlist");
+        }
+
+        document.getElementById("payment-popup-waitlist").innerHTML = `
+          <div style="text-align:center;padding:40px">
+            <h2>You're on the waitlist 🎉</h2>
+            <p>Your ${currentWaitlistGender.toLowerCase()} waitlist spot is 
+              <strong>#${data.spot}</strong>
+            </p>
+            <p>We’ll notify you if tickets open up.</p>
+          </div>
+        `;
+      } catch (err) {
+        alert(err.message);
+        waitlistBtn.disabled = false;
+        waitlistBtn.textContent = "Join the Waitlist";
+      }
+    });
+  }
 
   document.querySelectorAll("#payment-popup-waitlist .close-popup").forEach(btn => {
     btn.addEventListener("click", () => {
