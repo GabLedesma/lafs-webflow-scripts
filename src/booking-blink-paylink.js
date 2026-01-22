@@ -36,6 +36,9 @@
       qtyText.textContent = quantity;
     };
 
+    document.getElementById("waitlist-body").style.display = "flex";
+    document.getElementById("waitlist-body-success").style.display = "none";
+
     // Hide checkout popup to prevent overlap
     if (checkoutPopup) checkoutPopup.style.display = "none";
 
@@ -547,6 +550,12 @@
         if (!res.ok || !data.success) {
           throw new Error(data.error || "Failed to join waitlist");
         }
+
+        document.getElementById("waitlist-subtitle-success").textContent = `Your ${currentWaitlistGender.toLowerCase()} waitlist spot is`;
+        document.getElementById("waitlist-spot-text").textContent = `#${data.spot}`;
+
+        document.getElementById("waitlist-body").style.display = "none";
+        document.getElementById("waitlist-body-success").style.display = "flex";
 
         document.getElementById("payment-popup-waitlist").innerHTML = `
           <div style="text-align:center;padding:40px">
