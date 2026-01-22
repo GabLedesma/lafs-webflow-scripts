@@ -572,7 +572,7 @@
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
-      window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      // window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
       document.getElementById("payment-popup-waitlist").style.display = "none";
     });
@@ -591,7 +591,7 @@
         document.body.style.position = "";
         document.body.style.top = "";
         document.body.style.width = "";
-        window.scrollTo(0, parseInt(scrollY || "0") * -1);
+        // window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
         // Close popup
         popup.style.display = "none";
