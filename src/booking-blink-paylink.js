@@ -7,6 +7,17 @@
   let currentEventSlug = null;
   let currentWaitlistGender = null;
 
+  // Overlay loader
+  const processingOverlay = document.createElement("div");
+  processingOverlay.id = "payment-processing-overlay";
+  processingOverlay.style.cssText = `
+    display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+    background:rgba(255,255,255,0.8); z-index:9999;
+    justify-content:center; align-items:center;
+    font-size:1.2rem; color:#3C2AE7;
+    font-family:Inter, sans-serif; backdrop-filter:blur(3px);
+  `;
+
   function openWaitlistPopup(gender) {
     currentWaitlistGender = gender;
 
@@ -60,16 +71,6 @@
     const loadingSpinner = document.getElementById("loading-spinner");
     const paymentForm = document.getElementById("payment");
 
-    // Overlay loader
-    const processingOverlay = document.createElement("div");
-    processingOverlay.id = "payment-processing-overlay";
-    processingOverlay.style.cssText = `
-      display:none; position:fixed; top:0; left:0; right:0; bottom:0;
-      background:rgba(255,255,255,0.8); z-index:9999;
-      justify-content:center; align-items:center;
-      font-size:1.2rem; color:#3C2AE7;
-      font-family:Inter, sans-serif; backdrop-filter:blur(3px);
-    `;
     document.body.appendChild(processingOverlay);
 
     // Extract CMS data
