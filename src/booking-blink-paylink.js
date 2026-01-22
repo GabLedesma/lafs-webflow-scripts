@@ -526,7 +526,7 @@
         return;
       }
 
-      processingOverlay.innerHTML = "<div>Setting up payment, please wait...</div>";
+      processingOverlay.innerHTML = "<div>Adding you to the waitlist, please wait...</div>";
       processingOverlay.style.display = "flex";
 
       try {
