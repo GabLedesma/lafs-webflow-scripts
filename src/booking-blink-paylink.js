@@ -556,16 +556,7 @@
 
         document.getElementById("waitlist-body").style.display = "none";
         document.getElementById("waitlist-body-success").style.display = "flex";
-
-        document.getElementById("payment-popup-waitlist").innerHTML = `
-          <div style="text-align:center;padding:40px">
-            <h2>You're on the waitlist 🎉</h2>
-            <p>Your ${currentWaitlistGender.toLowerCase()} waitlist spot is 
-              <strong>#${data.spot}</strong>
-            </p>
-            <p>We’ll notify you if tickets open up.</p>
-          </div>
-        `;
+        
       } catch (err) {
         alert(err.message);
         waitlistBtn.disabled = false;
