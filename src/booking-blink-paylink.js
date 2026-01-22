@@ -525,8 +525,8 @@
         return;
       }
 
-      waitlistBtn.disabled = true;
-      waitlistBtn.textContent = "Joining waitlist...";
+      processingOverlay.innerHTML = "<div>Setting up payment, please wait...</div>";
+      processingOverlay.style.display = "flex";
 
       try {
         const res = await fetch(
@@ -556,11 +556,12 @@
 
         document.getElementById("waitlist-body").style.display = "none";
         document.getElementById("waitlist-body-success").style.display = "flex";
-        
+
+        processingOverlay.style.display = "none";
+
       } catch (err) {
         alert(err.message);
-        waitlistBtn.disabled = false;
-        waitlistBtn.textContent = "Join the Waitlist";
+        processingOverlay.style.display = "none";
       }
     });
   }
