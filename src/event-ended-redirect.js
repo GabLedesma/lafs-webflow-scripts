@@ -1,11 +1,13 @@
 (() => {
   document.addEventListener("DOMContentLoaded", function () {
-    const status = "{{wf {&quot;path&quot;:&quot;status&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
-    const cityRaw = "{{wf {&quot;path&quot;:&quot;venue-city&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
-    
-    wfLog("event ended redirect", { status, cityRaw });
+    const statusEl = document.getElementById("event-status");
+    const cityEl = document.getElementById("event-city");
 
-    // Only redirect ended events
+    if (!statusEl || !cityEl) return;
+
+    const status = statusEl.textContent.trim();
+    const cityRaw = cityEl.textContent.trim();
+
     if (status !== "Ended") return;
 
     if (!cityRaw) {
@@ -13,21 +15,18 @@
       return;
     }
 
-    // Normalize city → slug
     const citySlug = cityRaw
-      .replace(/[^\w\s-]/g, "") // remove emojis/symbols
-      .trim()
+      .replace(/[^\w\s-]/g, "")
       .toLowerCase()
+      .trim()
       .replace(/\s+/g, "-");
 
-    // Ignore non-city values
     const ignoredCities = ["party", "lgbtq"];
     if (ignoredCities.includes(citySlug)) {
       window.location.replace("/events");
       return;
     }
 
-    // ✅ Allowed city slugs (whitelist)
     const allowedCities = [
       "los-angeles",
       "new-york",
@@ -54,13 +53,11 @@
       "winchester"
     ];
 
-    // Fallback if city page does not exist
     if (!allowedCities.includes(citySlug)) {
       window.location.replace("/events");
       return;
     }
 
-    // Final redirect
     window.location.replace(`/events/${citySlug}`);
   });
 })();
