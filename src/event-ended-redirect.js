@@ -2,6 +2,8 @@
   document.addEventListener("DOMContentLoaded", function () {
     const status = "{{wf {&quot;path&quot;:&quot;status&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
     const cityRaw = "{{wf {&quot;path&quot;:&quot;venue-city&quot;,&quot;type&quot;:&quot;PlainText&quot;} }}";
+    
+    wfLog("event ended redirect", { status, cityRaw });
 
     // Only redirect ended events
     if (status !== "Ended") return;
