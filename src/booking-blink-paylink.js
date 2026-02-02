@@ -466,7 +466,7 @@
 
             // 2️⃣ Create Blink Paylink
             const paylinkRes = await fetch(
-            "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
+            "https://createblinkpaylinkstaging-xmismu3jga-uc.a.run.app",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
