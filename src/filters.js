@@ -5,6 +5,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     const selectMonth = document.getElementById("select-month");
     const selectCity = document.getElementById("select-city");
+    const selectAge = document.getElementById("select-age");
     const goButton = document.getElementById("select-month-city-button");
 
     if (selectMonth && selectMonth.options.length <= 1) {
@@ -78,12 +79,22 @@
     goButton?.addEventListener("click", () => {
       const month = selectMonth?.value;
       const city = selectCity?.value;
+      const age = selectAge?.value;
 
       let url = "/events";
-      if (city && city !== "Select City") url += city;
-      if (month && month !== "Select Month") url += `?month=${encodeURIComponent(month)}`;
+      if (city) url += city;
 
-      if (url !== location.pathname + location.search) location.href = url;
+      const params = new URLSearchParams();
+
+      if (month) params.set("month", month);
+      if (age) params.set("age", age);
+
+      const query = params.toString();
+      if (query) url += `?${query}`;
+
+      if (url !== location.pathname + location.search) {
+        location.href = url;
+      }
     });
   });
 })();
