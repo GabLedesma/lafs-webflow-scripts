@@ -1,5 +1,5 @@
 // ===============================
-// 🧭 Month + City Filter
+// 🧭 Month + City + Age (Redirect Only)
 // ===============================
 (() => {
   document.addEventListener("DOMContentLoaded", () => {
@@ -8,6 +8,7 @@
     const selectAge = document.getElementById("select-age");
     const goButton = document.getElementById("select-month-city-button");
 
+    // ---------- Populate Month ----------
     if (selectMonth && selectMonth.options.length <= 1) {
       const months = [
         "January","February","March","April","May","June",
@@ -23,7 +24,7 @@
       }
     }
 
-    // ---------- Populate City with Groups ----------
+    // ---------- Populate City ----------
     if (selectCity) {
       selectCity.innerHTML = `<option value="">Select City</option>`;
 
@@ -55,7 +56,7 @@
           { label: "Southampton", value: "/southampton" },
           { label: "Winchester", value: "/winchester" },
 
-          // Special categories (intentionally last)
+          // Special categories
           { label: "Party 🎉", value: "/parties" },
           { label: "LGBTQ+ 🌈", value: "/lgbtq" }
         ]
@@ -76,6 +77,7 @@
       });
     }
 
+    // ---------- GO Button ----------
     goButton?.addEventListener("click", () => {
       const month = selectMonth?.value;
       const city = selectCity?.value;
@@ -92,9 +94,7 @@
       const query = params.toString();
       if (query) url += `?${query}`;
 
-      if (url !== location.pathname + location.search) {
-        location.href = url;
-      }
+      location.href = url;
     });
   });
 })();
