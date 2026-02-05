@@ -125,6 +125,9 @@
       const eventInfo = eventData.event;
       const priceInfo = eventData.price;
 
+      const currencyCode = eventInfo?.currency || "GBP";
+      const currencySymbol = currencyCode === "USD" ? "$" : "£";
+
       let ticketPerGender = eventInfo.ticketPerGender;
       if (
         !ticketPerGender ||
@@ -220,11 +223,15 @@
         const undiscounted = priceInfo.undiscounted_price || null;
         const tag = priceInfo.tag || "";
 
-        ticketPrice.textContent = `£${price.toFixed(2)}`;
+        if(currencyCode === "USD") {
+          ticketPrice.textContent = `${currencySymbol}${price.toFixed(2)}`;
+        } else {
+          ticketPrice.textContent = `${currencySymbol}${price.toFixed(2)}`;
+        }
 
         if (undiscounted && undiscounted > price) {
           ticketUndiscounted.style.display = "inline";
-          ticketUndiscounted.textContent = `£${undiscounted.toFixed(2)}`;
+          ticketUndiscounted.textContent = `${currencySymbol}${undiscounted.toFixed(2)}`;
           const discountPercent = Math.round(((undiscounted - price) / undiscounted) * 100);
           ticketDiscountWrap.style.display = "inline";
           ticketDiscount.textContent = `-${discountPercent}%`;
@@ -278,11 +285,11 @@
         if (promoState) {
           const discount = (promoState.discountPerUnit || 0) * quantity;
           total = Math.max(0, subtotal - discount);
-          promoSubtotalText.textContent = `£${subtotal.toFixed(2)}`;
-          promoDiscountValue.textContent = `-£${discount.toFixed(2)}`;
+          promoSubtotalText.textContent = `${currencySymbol}${subtotal.toFixed(2)}`;
+          promoDiscountValue.textContent = `-${currencySymbol}${discount.toFixed(2)}`;
         }
 
-        totalPriceEl.textContent = `£${total.toFixed(2)}`;
+        totalPriceEl.textContent = `${currencySymbol}${total.toFixed(2)}`;
         qtyText.textContent = quantity;
 
         // Disable + button if the next bundle will exceed availability
@@ -353,7 +360,7 @@
           promoInputWrapper.style.display = "none";
           promoTotalWrapper.style.display = "block";
           promoDiscountText.textContent =
-            promo.type === "percentage" ? `${promo.value}% off` : `£${Number(promo.value).toFixed(2)} off`;
+            promo.type === "percentage" ? `${promo.value}% off` : `${currencySymbol}${Number(promo.value).toFixed(2)} off`;
           promoDiscountCodeText.textContent = promo.code;
 
           renderTotals();
@@ -441,7 +448,7 @@
                     },
                     purchaseData: {
                         amount: finalTotalPrice,
-                        currency: "GBP",
+                        currency: currencyCode,
                         priceId: selectedPriceId,
                         promoCode: promoState?.code || "N/A",
                         quantity,
