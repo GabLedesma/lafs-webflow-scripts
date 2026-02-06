@@ -474,7 +474,7 @@
             // 2️⃣ Create Blink Paylink
             const paylinkRes = await fetch(
             // "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
-            "https://us-central1-cosmic-fusion.cloudfunctions.net/createBlinkPaylinkStg",
+            "https://createblinkpaylinkstg-xmismu3jga-uc.a.run.app",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
