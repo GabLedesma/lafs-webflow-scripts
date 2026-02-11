@@ -401,6 +401,9 @@
 
       processingOverlay.style.display = "none";
       popup.style.display = "flex";
+      // 🔄 Reset popup scroll position
+      const popupBody = popup.querySelector(".popup-body");
+      if (popupBody) popupBody.scrollTop = 0;
       // Disable background scroll when popup opens
       savedScrollY = window.scrollY;
       document.body.style.position = "fixed";
