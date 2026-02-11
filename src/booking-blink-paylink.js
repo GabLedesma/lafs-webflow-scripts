@@ -4,6 +4,8 @@
 (() => {
   wfLog("Booking Blink Paylink script loaded");
 
+  let savedScrollY = 0;
+
   let currentEventSlug = null;
   let currentWaitlistGender = null;
 
@@ -111,7 +113,6 @@
       }
       // If priceId = 2, each quantity counts as 2 tickets
       const ticketsPerUnit = selectedPriceId === "2" ? 2 : 1;
-      const quantityStep = ticketsPerUnit;
 
       let bundleCount = 1;
       let quantity = bundleCount * ticketsPerUnit;
@@ -354,7 +355,7 @@
             body: JSON.stringify({
               code,
               slug,
-              quantity,
+              quantity: bundleCount,
               amountPerUnit: unitPrice
             }),
           });
@@ -401,8 +402,9 @@
       processingOverlay.style.display = "none";
       popup.style.display = "flex";
       // Disable background scroll when popup opens
-      document.body.style.top = `-${window.scrollY}px`;
+      savedScrollY = window.scrollY;
       document.body.style.position = "fixed";
+      document.body.style.top = `-${savedScrollY}px`;
       document.body.style.width = "100%";
       if (loadingSpinner) loadingSpinner.style.display = "none";
 
@@ -567,7 +569,7 @@
               email,
               phone,
               gender: currentWaitlistGender, // ✅ SAFE
-              quantity: bundleCount,
+              quantity,
             }),
           }
         );
@@ -599,6 +601,7 @@
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
+      window.scrollTo(0, savedScrollY);
       // window.scrollTo(0, parseInt(scrollY || "0") * -1);
 
       document.getElementById("payment-popup-waitlist").style.display = "none";
@@ -606,26 +609,15 @@
   });
 
   document.querySelectorAll(".close-popup").forEach(btn => {
-    // Re-select the popup + form for this script
-    const popup = document.getElementById("payment-popup");
-    const paymentForm = document.getElementById("payment");
-    
-    document.querySelectorAll(".close-popup").forEach(btn => {
-      btn.addEventListener("click", () => {
+    btn.addEventListener("click", () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
 
-        // Re-enable background scroll
-        const scrollY = document.body.style.top;
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.width = "";
-        // window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      window.scrollTo(0, savedScrollY);
 
-        // Close popup
-        popup.style.display = "none";
-
-        // Optional: reset form contents
-        paymentForm.innerHTML = "";
-      });
+      document.getElementById("payment-popup").style.display = "none";
+      document.getElementById("payment").innerHTML = "";
     });
   });
 })();
