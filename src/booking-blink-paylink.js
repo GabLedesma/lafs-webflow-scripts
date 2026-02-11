@@ -164,15 +164,22 @@
 
       genderSelect.addEventListener("change", (e) => {
         const selectedGender = e.target.value;
-        console.log("Selected:", selectedGender);
 
-        if (selectedGender === "Male" && maleTicketsAvailable <= 0) {
+        const requiredTickets = ticketsPerUnit;
+
+        if (
+          selectedGender === "Male" &&
+          maleTicketsAvailable < requiredTickets
+        ) {
           openWaitlistPopup("Male");
           genderSelect.value = "";
           return;
         }
 
-        if (selectedGender === "Female" && femaleTicketsAvailable <= 0) {
+        if (
+          selectedGender === "Female" &&
+          femaleTicketsAvailable < requiredTickets
+        ) {
           openWaitlistPopup("Female");
           genderSelect.value = "";
           return;
