@@ -111,6 +111,10 @@
       }
       // If priceId = 2, each quantity counts as 2 tickets
       const ticketsPerUnit = selectedPriceId === "2" ? 2 : 1;
+      const quantityStep = ticketsPerUnit;
+
+      let bundleCount = 1;
+      let quantity = bundleCount * ticketsPerUnit;
 
       // 🔹 Fetch event + price
       const response = await fetch(`https://geteventdetails-xmismu3jga-uc.a.run.app?slug=${slug}&priceId=${selectedPriceId}`);
@@ -254,7 +258,6 @@
       const qtyText = document.getElementById("qty-text");
       const totalPriceEl = document.getElementById("ticket-total-price");
 
-      let quantity = 1;
       let unitPrice = priceInfo?.price || 0;
 
       // === PROMO CODE ELEMENTS ===
@@ -279,39 +282,42 @@
       let finalTotal = unitPrice * quantity;
 
       function renderTotals() {
-        const subtotal = unitPrice * quantity;
+        const subtotal = unitPrice * bundleCount;
         let total = subtotal;
 
         if (promoState) {
-          const discount = (promoState.discountPerUnit || 0) * quantity;
+          const discount = (promoState.discountPerUnit || 0) * bundleCount;
           total = Math.max(0, subtotal - discount);
+
           promoSubtotalText.textContent = `${currencySymbol}${subtotal.toFixed(2)}`;
           promoDiscountValue.textContent = `-${currencySymbol}${discount.toFixed(2)}`;
         }
 
-        totalPriceEl.textContent = `${currencySymbol}${total.toFixed(2)}`;
+        quantity = bundleCount * ticketsPerUnit;
         qtyText.textContent = quantity;
+        totalPriceEl.textContent = `${currencySymbol}${total.toFixed(2)}`;
 
-        // Disable + button if the next bundle will exceed availability
-        const nextTicketCount = (quantity + 1) * ticketsPerUnit;
+        const nextTicketCount = (bundleCount + 1) * ticketsPerUnit;
+
         qtyPlus.style.opacity = nextTicketCount > ticketsAvailable ? "0.4" : "1";
         qtyPlus.style.pointerEvents = nextTicketCount > ticketsAvailable ? "none" : "auto";
 
         finalTotal = total;
       }
 
+
       qtyMinus.onclick = () => {
-        if (quantity > 1) {
-          quantity--;
+        if (bundleCount > 1) {
+          bundleCount--;
           renderTotals();
         }
       };
       qtyPlus.onclick = () => {
-        if ((quantity + 1) * ticketsPerUnit <= ticketsAvailable) {
-          quantity++;
+        if ((bundleCount + 1) * ticketsPerUnit <= ticketsAvailable) {
+          bundleCount++;
           renderTotals();
         } else {
-          alert(`Only ${ticketsAvailable} ${userGender} ticket(s) are available.`);
+          alert(`Only ${ticketsAvailable} ticket(s) are available.`);
         }
       };
 
@@ -473,8 +479,8 @@
 
             // 2️⃣ Create Blink Paylink
             const paylinkRes = await fetch(
-            // "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
-            "https://createblinkpaylinkstg-xmismu3jga-uc.a.run.app",
+            "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
+            // "https://createblinkpaylinkstg-xmismu3jga-uc.a.run.app",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
