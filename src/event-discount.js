@@ -1,6 +1,8 @@
 (() => {
-    document.addEventListener("DOMContentLoaded", () => {
+    function applyEventDiscounts() {
         document.querySelectorAll(".event-item").forEach(eventItem => {
+            if (eventItem.dataset.discountApplied) return;
+
             const oneTicketEl = eventItem.querySelector("#event-price-1-text");
             const twoTicketEl = eventItem.querySelector("#event-price-2-text");
             const saveTextEl = eventItem.querySelector("#event-save-discount-text");
@@ -10,11 +12,9 @@
             const oneText = oneTicketEl.textContent.trim();
             const twoText = twoTicketEl.textContent.trim();
 
-            // Extract currency symbol (everything that's NOT a number, space, dot, comma)
             const currencyMatch = oneText.match(/[^\d.,\s]+/);
             const currencySymbol = currencyMatch ? currencyMatch[0] : "";
 
-            // Extract numeric values
             const onePrice = parseFloat(oneText.replace(/[^\d.]/g, ""));
             const twoPrice = parseFloat(twoText.replace(/[^\d.]/g, ""));
 
@@ -31,6 +31,25 @@
             } else {
             saveTextEl.style.display = "none";
             }
+
+            // Prevent double-processing
+            eventItem.dataset.discountApplied = "true";
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        applyEventDiscounts();
+
+        const listWrapper = document.querySelector(".events-list-wrapper");
+        if (!listWrapper) return;
+
+        const observer = new MutationObserver(() => {
+            applyEventDiscounts();
+        });
+
+        observer.observe(listWrapper, {
+            childList: true,
+            subtree: true
         });
     });
 })();
