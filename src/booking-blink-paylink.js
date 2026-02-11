@@ -279,7 +279,7 @@
       // promo state
       let promoState = null;
 
-      let finalTotal = unitPrice * quantity;
+      let finalTotal = unitPrice * bundleCount;
 
       function renderTotals() {
         const subtotal = unitPrice * bundleCount;
@@ -409,10 +409,10 @@
         const userGender = document.getElementById("payment-gender").value; 
         const hearSelect = document.getElementById("hear-select").value;
 
-        let subtotal = unitPrice * quantity;
+        let subtotal = unitPrice * bundleCount;
         let finalTotalPrice = subtotal;
         if (promoState) {
-          const discount = (promoState.discountPerUnit || 0) * quantity;
+          const discount = (promoState.discountPerUnit || 0) * bundleCount;
           finalTotalPrice = Math.max(0, subtotal - discount);
         }
 
@@ -457,7 +457,7 @@
                         currency: currencyCode,
                         priceId: selectedPriceId,
                         promoCode: promoState?.code || "N/A",
-                        quantity,
+                        quantity: bundleCount,
                         hearAbout: hearSelect,
                     },
                     userDetails: {
@@ -555,7 +555,7 @@
               email,
               phone,
               gender: currentWaitlistGender, // ✅ SAFE
-              quantity,
+              quantity: bundleCount,
             }),
           }
         );
