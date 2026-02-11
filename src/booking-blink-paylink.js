@@ -244,7 +244,12 @@
           ticketDiscountWrap.style.display = "none";
         }
 
-        if (tag && tag.trim() !== "") {
+        if (selectedPriceId === "2") {
+          // Force custom bundle tag
+          ticketTagWrap.style.display = "inline-flex";
+          ticketTag.textContent = `2-for-${currencySymbol}${price.toFixed(2)} Offer`;
+        } else if (tag && tag.trim() !== "") {
+          // Normal tag from CMS
           ticketTagWrap.style.display = "inline-flex";
           ticketTag.textContent = tag;
         } else {
