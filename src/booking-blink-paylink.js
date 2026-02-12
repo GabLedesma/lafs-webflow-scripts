@@ -161,9 +161,12 @@
       let femaleTicketsAvailable = ticketPerGender.female - ticketsSold.female;
 
       const genderSelect = document.getElementById("payment-gender");
-      const eventDetails = document.getElementById("event-details");
 
-      genderSelect.addEventListener("change", (e) => {
+      // 💥 wipe old listeners safely
+      const genderClone = genderSelect.cloneNode(true);
+      genderSelect.parentNode.replaceChild(genderClone, genderSelect);
+
+      genderClone.addEventListener("change", (e) => {
         const selectedGender = e.target.value;
 
         const requiredTickets = ticketsPerUnit;
@@ -173,7 +176,7 @@
           maleTicketsAvailable < requiredTickets
         ) {
           openWaitlistPopup("Male");
-          genderSelect.value = "";
+          genderClone.value = "";
           return;
         }
 
@@ -182,18 +185,22 @@
           femaleTicketsAvailable < requiredTickets
         ) {
           openWaitlistPopup("Female");
-          genderSelect.value = "";
+          genderClone.value = "";
           return;
         }
       });
 
       // Reset selected value
-      genderSelect.value = "";
+      genderClone.value = "";
       
       let ticketsAvailable = 0;
+      
+      const eventDetails = document.getElementById("event-details");
+      const eventDetailsClone = eventDetails.cloneNode(true);
+      eventDetails.parentNode.replaceChild(eventDetailsClone, eventDetails);
 
-      eventDetails.addEventListener("click", (e) => {
-        const gender = genderSelect.value;
+      eventDetailsClone.addEventListener("click", (e) => {
+        const gender = genderClone.value;
 
         if (!gender) {
           e.preventDefault();     // stop links, buttons, forms
@@ -336,13 +343,22 @@
 
       renderTotals(); 
 
+      const promoInputClone = promoInput.cloneNode(true);
+      promoInput.parentNode.replaceChild(promoInputClone, promoInput);
+
+      const promoApplyClone = promoApplyText.cloneNode(true);
+      promoApplyText.parentNode.replaceChild(promoApplyClone, promoApplyText);
+
+      const promoRemoveClone = promoRemoveWrapper.cloneNode(true);
+      promoRemoveWrapper.parentNode.replaceChild(promoRemoveClone, promoRemoveWrapper);
+
       // === PROMO CODE LOGIC ===
-      promoInput.addEventListener("input", () => {
-        promoApplyText.style.display = promoInput.value.trim() ? "flex" : "none";
+      promoInputClone.addEventListener("input", () => {
+        promoApplyClone.style.display = promoInputClone.value.trim() ? "flex" : "none";
       });
 
-      promoApplyText.addEventListener("click", async () => {
-        const code = promoInput.value.trim();
+      promoApplyClone.addEventListener("click", async () => {
+        const code = promoInputClone.value.trim();
         if (!code) return;
 
         processingOverlay.style.display = "flex";
@@ -390,12 +406,12 @@
         }
       });
 
-      promoRemoveWrapper.addEventListener("click", () => {
+      promoRemoveClone.addEventListener("click", () => {
         promoState = null;
         promoTotalWrapper.style.display = "none";
         promoInputWrapper.style.display = "flex";
-        promoInput.value = "";
-        promoApplyText.style.display = "none";
+        promoInputClone.value = "";
+        promoApplyClone.style.display = "none";
         renderTotals();
       });
 
@@ -413,8 +429,10 @@
 
       // === PAY BUTTON ===
       const payBtn = document.getElementById("payment-book-button");
-      payBtn.value ="Book & Secure Payment";
-      payBtn.onclick = async (event) => {
+      payBtn.replaceWith(payBtn.cloneNode(true));
+      const newPayBtn = document.getElementById("payment-book-button");
+      newPayBtn.value ="Book & Secure Payment";
+      newPayBtn.onclick = async (event) => {
         event.preventDefault();
         processingOverlay.innerHTML = "<div>Setting up payment, please wait...</div>";
         processingOverlay.style.display = "flex";
