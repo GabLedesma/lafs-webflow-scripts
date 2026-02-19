@@ -118,7 +118,7 @@
       let quantity = bundleCount * ticketsPerUnit;
 
       // 🔹 Fetch event + price
-      const response = await fetch(`https://geteventdetails-xmismu3jga-uc.a.run.app?slug=${slug}&priceId=${selectedPriceId}`);
+      const response = await fetch(`https://us-central1-cosmic-fusion.cloudfunctions.net/stagingGetEventDetails?slug=${slug}&priceId=${selectedPriceId}`);
       const eventData = await response.json();
 
       if (!response.ok || !eventData.success) {
@@ -515,8 +515,8 @@
 
             // 2️⃣ Create Blink Paylink
             const paylinkRes = await fetch(
-            "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
-            // "https://createblinkpaylinkstg-xmismu3jga-uc.a.run.app",
+            // "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
+            "https://createblinkpaylinkstg-xmismu3jga-uc.a.run.app",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
