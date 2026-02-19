@@ -118,7 +118,7 @@
       let quantity = bundleCount * ticketsPerUnit;
 
       // 🔹 Fetch event + price
-      const response = await fetch(`https://us-central1-cosmic-fusion.cloudfunctions.net/stagingGetEventDetails?slug=${slug}&priceId=${selectedPriceId}`);
+      const response = await fetch(`https://staginggeteventdetails-xmismu3jga-uc.a.run.app?slug=${slug}&priceId=${selectedPriceId}`);
       const eventData = await response.json();
 
       if (!response.ok || !eventData.success) {
@@ -319,9 +319,14 @@
         totalPriceEl.textContent = `${currencySymbol}${total.toFixed(2)}`;
 
         const nextTicketCount = (bundleCount + 1) * ticketsPerUnit;
+        const gender = genderClone.value;
+        const isRatioLocked =
+          (gender === "Male" && !availability.maleAvailable) ||
+          (gender === "Female" && !availability.femaleAvailable);
 
-        qtyPlus.style.opacity = nextTicketCount > ticketsAvailable ? "0.4" : "1";
-        qtyPlus.style.pointerEvents = nextTicketCount > ticketsAvailable ? "none" : "auto";
+        const qtyPlusBlocked = nextTicketCount > ticketsAvailable || isRatioLocked;
+        qtyPlus.style.opacity = qtyPlusBlocked ? "0.4" : "1";
+        qtyPlus.style.pointerEvents = qtyPlusBlocked ? "none" : "auto";
 
         finalTotal = total;
       }
@@ -334,6 +339,16 @@
         }
       };
       qtyPlus.onclick = () => {
+        const gender = genderClone.value;
+        const isRatioLocked =
+          (gender === "Male" && !availability.maleAvailable) ||
+          (gender === "Female" && !availability.femaleAvailable);
+
+        if (isRatioLocked) {
+          openWaitlistPopup(gender);
+          return;
+        }
+
         if ((bundleCount + 1) * ticketsPerUnit <= ticketsAvailable) {
           bundleCount++;
           renderTotals();
