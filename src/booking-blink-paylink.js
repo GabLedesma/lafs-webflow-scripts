@@ -161,6 +161,24 @@
       let maleTicketsAvailable = ticketPerGender.male - ticketsSold.male;
       let femaleTicketsAvailable = ticketPerGender.female - ticketsSold.female;
 
+      const totalCapacity = ticketPerGender.male + ticketPerGender.female;
+
+      // Forward-looking ratio check: would buying additionalTickets of gender
+      // push the ratio past 65%? Mirrors backend computeGenderAvailability logic.
+      function wouldGenderBeAvailable(gender, additionalTickets) {
+        const MIN_PER_GENDER = 10;
+        const THRESHOLD = 0.65;
+        const futureMale = gender === "Male" ? ticketsSold.male + additionalTickets : ticketsSold.male;
+        const futureFemale = gender === "Female" ? ticketsSold.female + additionalTickets : ticketsSold.female;
+        const futureTotalSold = futureMale + futureFemale;
+
+        if (futureTotalSold >= totalCapacity) return false;
+        if (futureMale < MIN_PER_GENDER && futureFemale < MIN_PER_GENDER) return true;
+
+        const genderSold = gender === "Male" ? futureMale : futureFemale;
+        return (genderSold / futureTotalSold) <= THRESHOLD;
+      }
+
       const genderSelect = document.getElementById("payment-gender");
 
       // 💥 wipe old listeners safely
@@ -169,12 +187,11 @@
 
       genderClone.addEventListener("change", (e) => {
         const selectedGender = e.target.value;
-
         const requiredTickets = ticketsPerUnit;
 
         if (
           selectedGender === "Male" &&
-          (maleTicketsAvailable < requiredTickets || !availability.maleAvailable)
+          (maleTicketsAvailable < requiredTickets || !wouldGenderBeAvailable("Male", requiredTickets))
         ) {
           openWaitlistPopup("Male");
           genderClone.value = "";
@@ -183,7 +200,7 @@
 
         if (
           selectedGender === "Female" &&
-          (femaleTicketsAvailable < requiredTickets || !availability.femaleAvailable)
+          (femaleTicketsAvailable < requiredTickets || !wouldGenderBeAvailable("Female", requiredTickets))
         ) {
           openWaitlistPopup("Female");
           genderClone.value = "";
@@ -320,9 +337,7 @@
 
         const nextTicketCount = (bundleCount + 1) * ticketsPerUnit;
         const gender = genderClone.value;
-        const isRatioLocked =
-          (gender === "Male" && !availability.maleAvailable) ||
-          (gender === "Female" && !availability.femaleAvailable);
+        const isRatioLocked = gender ? !wouldGenderBeAvailable(gender, nextTicketCount) : false;
 
         const qtyPlusBlocked = nextTicketCount > ticketsAvailable || isRatioLocked;
         qtyPlus.style.opacity = qtyPlusBlocked ? "0.4" : "1";
@@ -340,16 +355,15 @@
       };
       qtyPlus.onclick = () => {
         const gender = genderClone.value;
-        const isRatioLocked =
-          (gender === "Male" && !availability.maleAvailable) ||
-          (gender === "Female" && !availability.femaleAvailable);
+        const nextTicketCount = (bundleCount + 1) * ticketsPerUnit;
+        const isRatioLocked = gender ? !wouldGenderBeAvailable(gender, nextTicketCount) : false;
 
         if (isRatioLocked) {
           openWaitlistPopup(gender);
           return;
         }
 
-        if ((bundleCount + 1) * ticketsPerUnit <= ticketsAvailable) {
+        if (nextTicketCount <= ticketsAvailable) {
           bundleCount++;
           renderTotals();
         } else {
