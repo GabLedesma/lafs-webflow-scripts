@@ -129,6 +129,7 @@
 
       const eventInfo = eventData.event;
       const priceInfo = eventData.price;
+      const availability = eventData.availability || {maleAvailable: true, femaleAvailable: true};
 
       const currencyCode = eventInfo?.currency || "GBP";
       const currencySymbol = currencyCode === "USD" ? "$" : "£";
@@ -173,7 +174,7 @@
 
         if (
           selectedGender === "Male" &&
-          maleTicketsAvailable < requiredTickets
+          (maleTicketsAvailable < requiredTickets || !availability.maleAvailable)
         ) {
           openWaitlistPopup("Male");
           genderClone.value = "";
@@ -182,7 +183,7 @@
 
         if (
           selectedGender === "Female" &&
-          femaleTicketsAvailable < requiredTickets
+          (femaleTicketsAvailable < requiredTickets || !availability.femaleAvailable)
         ) {
           openWaitlistPopup("Female");
           genderClone.value = "";
