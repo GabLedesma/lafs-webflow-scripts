@@ -173,7 +173,7 @@
         const futureTotalSold = futureMale + futureFemale;
 
         if (futureTotalSold >= totalCapacity) return false;
-        if (futureMale < MIN_PER_GENDER && futureFemale < MIN_PER_GENDER) return true;
+        if (futureMale <= MIN_PER_GENDER && futureFemale <= MIN_PER_GENDER) return true;
 
         const genderSold = gender === "Male" ? futureMale : futureFemale;
         return (genderSold / futureTotalSold) <= THRESHOLD;
