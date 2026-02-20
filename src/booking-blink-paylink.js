@@ -231,6 +231,9 @@
           genderClone.value = "";
           return;
         }
+
+        bundleCount = 1;
+        renderTotals();
       });
 
       // Reset selected value (skip for LGBTQ — already preselected to Male)
