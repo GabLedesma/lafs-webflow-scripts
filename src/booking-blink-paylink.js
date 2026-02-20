@@ -189,6 +189,14 @@
 
       const genderSelect = document.getElementById("payment-gender");
 
+      // Restore Female option if a previous LGBTQ event removed it from the DOM
+      if (!Array.from(genderSelect.options).find((o) => o.value === "Female")) {
+        const femaleOption = document.createElement("option");
+        femaleOption.value = "Female";
+        femaleOption.textContent = "Female";
+        genderSelect.appendChild(femaleOption);
+      }
+
       // 💥 wipe old listeners safely
       const genderClone = genderSelect.cloneNode(true);
       genderSelect.parentNode.replaceChild(genderClone, genderSelect);
@@ -225,8 +233,8 @@
         }
       });
 
-      // Reset selected value
-      genderClone.value = "";
+      // Reset selected value (skip for LGBTQ — already preselected to Male)
+      if (!isLGBTQ) genderClone.value = "";
       
       let ticketsAvailable = 0;
       
