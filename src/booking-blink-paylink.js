@@ -193,6 +193,13 @@
       const genderClone = genderSelect.cloneNode(true);
       genderSelect.parentNode.replaceChild(genderClone, genderSelect);
 
+      if (isLGBTQ) {
+        // Remove Female option and preselect Male for LGBTQ events
+        const femaleOption = Array.from(genderClone.options).find((o) => o.value === "Female");
+        if (femaleOption) genderClone.removeChild(femaleOption);
+        genderClone.value = "Male";
+      }
+
       genderClone.addEventListener("change", (e) => {
         const selectedGender = e.target.value;
         const requiredTickets = ticketsPerUnit;
