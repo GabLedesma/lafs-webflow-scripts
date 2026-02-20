@@ -20,7 +20,7 @@
     font-family:Inter, sans-serif; backdrop-filter:blur(3px);
   `;
 
-  function openWaitlistPopup(gender) {
+  function openWaitlistPopup(gender, reason = "sold_out") {
     currentWaitlistGender = gender;
 
     const waitlistPopup = document.getElementById("payment-popup-waitlist");
@@ -28,7 +28,9 @@
     const titleEl = document.getElementById("waitlist-title");
 
     if (titleEl) {
-      titleEl.textContent = `${gender} tickets are sold out`;
+      titleEl.textContent = reason === "ratio_locked"
+        ? `${gender} tickets are temporarily unavailable`
+        : `${gender} tickets are sold out`;
     }
 
     const qtyMinus = document.getElementById("waitlist-qty-minus");
@@ -129,7 +131,8 @@
 
       const eventInfo = eventData.event;
       const priceInfo = eventData.price;
-      const availability = eventData.availability || {maleAvailable: true, femaleAvailable: true};
+      const availability = eventData.availability || {maleAvailable: true, femaleAvailable: true, isLGBTQ: false};
+      const isLGBTQ = availability.isLGBTQ === true;
 
       const currencyCode = eventInfo?.currency || "GBP";
       const currencySymbol = currencyCode === "USD" ? "$" : "£";
@@ -165,7 +168,12 @@
 
       // Forward-looking ratio check: would buying additionalTickets of gender
       // push the ratio past 65%? Mirrors backend computeGenderAvailability logic.
+      // LGBTQ events skip the ratio check — only male tickets are sold.
       function wouldGenderBeAvailable(gender, additionalTickets) {
+        if (isLGBTQ) {
+          return gender === "Male";
+        }
+
         const MIN_PER_GENDER = 10;
         const THRESHOLD = 0.65;
         const futureMale = gender === "Male" ? ticketsSold.male + additionalTickets : ticketsSold.male;
@@ -193,7 +201,8 @@
           selectedGender === "Male" &&
           (maleTicketsAvailable < requiredTickets || !wouldGenderBeAvailable("Male", requiredTickets))
         ) {
-          openWaitlistPopup("Male");
+          const reason = maleTicketsAvailable < requiredTickets ? "sold_out" : "ratio_locked";
+          openWaitlistPopup("Male", reason);
           genderClone.value = "";
           return;
         }
@@ -202,7 +211,8 @@
           selectedGender === "Female" &&
           (femaleTicketsAvailable < requiredTickets || !wouldGenderBeAvailable("Female", requiredTickets))
         ) {
-          openWaitlistPopup("Female");
+          const reason = femaleTicketsAvailable < requiredTickets ? "sold_out" : "ratio_locked";
+          openWaitlistPopup("Female", reason);
           genderClone.value = "";
           return;
         }
@@ -359,7 +369,7 @@
         const isRatioLocked = gender ? !wouldGenderBeAvailable(gender, nextTicketCount) : false;
 
         if (isRatioLocked) {
-          openWaitlistPopup(gender);
+          openWaitlistPopup(gender, "ratio_locked");
           return;
         }
 
