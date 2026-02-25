@@ -498,9 +498,8 @@
         const userName = document.getElementById("payment-name").value;
         const userEmail = document.getElementById("payment-email").value;
         const userPhone = document.getElementById("payment-phone").value;
-        const userCity = document.getElementById("payment-city").value;
         const userGender = document.getElementById("payment-gender").value; 
-        const hearSelect = document.getElementById("hear-select").value;
+        // const hearSelect = document.getElementById("hear-select").value;
 
         let subtotal = unitPrice * bundleCount;
         let finalTotalPrice = subtotal;
@@ -514,9 +513,8 @@
             { field: userName, name: "Name" },
             { field: userEmail, name: "Email" },
             { field: userPhone, name: "Phone" },
-            { field: userCity, name: "City" },
             { field: userGender, name: "Gender" },
-            { field: hearSelect, name: "Hear about" },
+            // { field: hearSelect, name: "Hear about" },
         ];
 
         const missing = requiredFields.filter(f => !f.field);
@@ -551,7 +549,7 @@
                         priceId: selectedPriceId,
                         promoCode: promoState?.code || "N/A",
                         quantity: bundleCount,
-                        hearAbout: hearSelect,
+                        // hearAbout: hearSelect,
                     },
                     userDetails: {
                         name: userName,
