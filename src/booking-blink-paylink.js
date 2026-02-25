@@ -485,11 +485,17 @@
       document.body.style.width = "100%";
       if (loadingSpinner) loadingSpinner.style.display = "none";
 
-      // === PAY BUTTON ===
-      const payBtn = document.getElementById("payment-book-button") || document.getElementById("payment-book-button-sticky");
-      payBtn.replaceWith(payBtn.cloneNode(true));
-      const newPayBtn = document.getElementById("payment-book-button") || document.getElementById("payment-book-button-sticky");
-      newPayBtn.value ="Book & Secure Payment";
+      // === PAY BUTTONS ===
+      const payBtns = document.querySelectorAll(
+        "#payment-book-button, #payment-book-button-sticky"
+      );
+
+      payBtns.forEach((btn) => {
+        const newBtn = btn.cloneNode(true); // remove old listeners safely
+        btn.replaceWith(newBtn);
+
+        newBtn.value = "Book & Secure Payment";
+      });
       newPayBtn.onclick = async (event) => {
         event.preventDefault();
         processingOverlay.innerHTML = "<div>Setting up payment, please wait...</div>";
