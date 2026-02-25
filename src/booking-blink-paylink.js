@@ -486,9 +486,9 @@
       if (loadingSpinner) loadingSpinner.style.display = "none";
 
       // === PAY BUTTON ===
-      const payBtn = document.getElementById("payment-book-button");
+      const payBtn = document.getElementById("payment-book-button") || document.getElementById("payment-book-button-sticky");
       payBtn.replaceWith(payBtn.cloneNode(true));
-      const newPayBtn = document.getElementById("payment-book-button");
+      const newPayBtn = document.getElementById("payment-book-button") || document.getElementById("payment-book-button-sticky");
       newPayBtn.value ="Book & Secure Payment";
       newPayBtn.onclick = async (event) => {
         event.preventDefault();
