@@ -485,121 +485,136 @@
       document.body.style.width = "100%";
       if (loadingSpinner) loadingSpinner.style.display = "none";
 
-      // === PAY BUTTONS ===
+      // === PAY BUTTONS (DESKTOP + MOBILE) ===
       const payBtns = document.querySelectorAll(
         "#payment-book-button, #payment-book-button-sticky"
       );
 
       payBtns.forEach((btn) => {
-        const newBtn = btn.cloneNode(true); // remove old listeners safely
+        // Remove previous listeners safely
+        const newBtn = btn.cloneNode(true);
         btn.replaceWith(newBtn);
 
         newBtn.value = "Book & Secure Payment";
-      });
-      newPayBtn.onclick = async (event) => {
-        event.preventDefault();
-        processingOverlay.innerHTML = "<div>Setting up payment, please wait...</div>";
-        processingOverlay.style.display = "flex";
 
-        const userName = document.getElementById("payment-name").value;
-        const userEmail = document.getElementById("payment-email").value;
-        const userPhone = document.getElementById("payment-phone").value;
-        const userGender = document.getElementById("payment-gender").value; 
-        // const hearSelect = document.getElementById("hear-select").value;
+        newBtn.onclick = async (event) => {
+          event.preventDefault();
 
-        let subtotal = unitPrice * bundleCount;
-        let finalTotalPrice = subtotal;
-        if (promoState) {
-          const discount = (promoState.discountPerUnit || 0) * bundleCount;
-          finalTotalPrice = Math.max(0, subtotal - discount);
-        }
+          processingOverlay.innerHTML =
+            "<div>Setting up payment, please wait...</div>";
+          processingOverlay.style.display = "flex";
 
-        // === Validate Required Fields ===
-        const requiredFields = [
+          const userName = document.getElementById("payment-name").value;
+          const userEmail = document.getElementById("payment-email").value;
+          const userPhone = document.getElementById("payment-phone").value;
+          const userGender = document.getElementById("payment-gender").value;
+
+          let subtotal = unitPrice * bundleCount;
+          let finalTotalPrice = subtotal;
+
+          if (promoState) {
+            const discount = (promoState.discountPerUnit || 0) * bundleCount;
+            finalTotalPrice = Math.max(0, subtotal - discount);
+          }
+
+          // === Validate Required Fields ===
+          const requiredFields = [
             { field: userName, name: "Name" },
             { field: userEmail, name: "Email" },
             { field: userPhone, name: "Phone" },
             { field: userGender, name: "Gender" },
-            // { field: hearSelect, name: "Hear about" },
-        ];
+          ];
 
-        const missing = requiredFields.filter(f => !f.field);
+          const missing = requiredFields.filter((f) => !f.field);
 
-        if (missing.length > 0) {
-          alert(`Please fill in the following required fields:\n\n${missing.map(f => "• " + f.name).join("\n")}`);
-          processingOverlay.style.display = "none";
-          return; // Stop execution
-        }
+          if (missing.length > 0) {
+            alert(
+              `Please fill in the following required fields:\n\n${missing
+                .map((f) => "• " + f.name)
+                .join("\n")}`
+            );
+            processingOverlay.style.display = "none";
+            return;
+          }
 
-        const orderId = window.crypto.randomUUID();
+          const orderId = window.crypto.randomUUID();
 
-        try {
-            const response = await fetch("https://createbookingdraft-xmismu3jga-uc.a.run.app", {
+          try {
+            // 1️⃣ Create Booking Draft
+            const response = await fetch(
+              "https://createbookingdraft-xmismu3jga-uc.a.run.app",
+              {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    orderId,
-                    eventData: {
-                        eventId: eventInfo.eventId,
-                        eventName,
-                        eventCity,
-                        eventDate,
-                        slug,
-                        venueAddress,
-                        venueName,
-                        ageRange,
-                    },
-                    purchaseData: {
-                        amount: finalTotalPrice,
-                        currency: currencyCode,
-                        priceId: selectedPriceId,
-                        promoCode: promoState?.code || "N/A",
-                        quantity: bundleCount,
-                        // hearAbout: hearSelect,
-                    },
-                    userDetails: {
-                        name: userName,
-                        email: userEmail,
-                        gender: userGender,
-                        phone: userPhone,
-                    },
+                  orderId,
+                  eventData: {
+                    eventId: eventInfo.eventId,
+                    eventName,
+                    eventCity,
+                    eventDate,
+                    slug,
+                    venueAddress,
+                    venueName,
+                    ageRange,
+                  },
+                  purchaseData: {
+                    amount: finalTotalPrice,
+                    currency: currencyCode,
+                    priceId: selectedPriceId,
+                    promoCode: promoState?.code || "N/A",
+                    quantity: bundleCount,
+                  },
+                  userDetails: {
+                    name: userName,
+                    email: userEmail,
+                    gender: userGender,
+                    phone: userPhone,
+                  },
                 }),
-            });
+              }
+            );
 
             const data = await response.json();
+
             if (!response.ok) {
-                wfErr("🔥 Error creating booking draft:", data.error);
-                alert("Error creating payment: " + data.error);
-                processingOverlay.style.display = "none";
-                return;
+              wfErr("🔥 Error creating booking draft:", data.error);
+              alert("Error creating payment: " + data.error);
+              processingOverlay.style.display = "none";
+              return;
             }
 
             // 2️⃣ Create Blink Paylink
             const paylinkRes = await fetch(
-            "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
-            {
+              "https://createblinkpaylink-xmismu3jga-uc.a.run.app",
+              {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ orderId }),
-            }
+              }
             );
 
             const paylinkData = await paylinkRes.json();
+
             if (!paylinkRes.ok) {
-                wfErr("🔥 Error creating blink paylink:", paylinkData.error);
-                alert("Error creating payment: " + paylinkData.error);
-                processingOverlay.style.display = "none";
-                return;
+              wfErr("🔥 Error creating blink paylink:", paylinkData.error);
+              alert("Error creating payment: " + paylinkData.error);
+              processingOverlay.style.display = "none";
+              return;
             }
 
             // 3️⃣ Redirect to Blink
             window.location.href = paylinkData.url;
-        } catch (err) {
-          alert("Something went wrong processing your payment: " + (err.message || err));
-        } finally {
-          processingOverlay.style.display = "none";
-        }
-      };
+          } catch (err) {
+            alert(
+              "Something went wrong processing your payment: " +
+                (err.message || err)
+            );
+          } finally {
+            processingOverlay.style.display = "none";
+          }
+        };
+      });
 
     } catch (err) {
       console.error("🔥 Setup failed:", err);
