@@ -68,7 +68,7 @@
 
   document.body.addEventListener("click", async (event) => {
     const btn = event.target.closest(".book-button") || event.target.closest("#event-book-now") || event.target.closest(".featured-event-book-btn");
-    if (!btn && !moreDetailsBtn) return;
+    if (!btn) return;
     event.preventDefault();
 
     const popup = document.getElementById("payment-popup");
