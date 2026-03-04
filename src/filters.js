@@ -59,7 +59,7 @@
           // Special categories
           { label: "Party 🎉", value: "/parties" },
           { label: "LGBTQ+ 🌈", value: "/lgbtq" },
-          { label: "University", value: "/university" }
+          { label: "Universities 🎓", value: "/university" }
         ]
       };
 
