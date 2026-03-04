@@ -67,7 +67,6 @@
   }
 
   document.body.addEventListener("click", async (event) => {
-    const moreDetailsBtn = event.target.closest("#more-details-btn");
     const btn = event.target.closest(".book-button") || event.target.closest("#event-book-now") || event.target.closest(".featured-event-book-btn");
     if (!btn && !moreDetailsBtn) return;
     event.preventDefault();
@@ -79,7 +78,7 @@
     document.body.appendChild(processingOverlay);
 
     // Extract CMS data
-    const activeBtn = btn || moreDetailsBtn;
+    const activeBtn = btn;
     const cardItem = activeBtn.closest("[role='listitem']") || document.querySelector('.container-large.events') || activeBtn.closest('.featured-event') || "";
     const redirectionLink = cardItem.getAttribute("data-event-redirection-link");
 
@@ -87,8 +86,6 @@
       window.location.href = redirectionLink;
       return;
     }
-
-    if (moreDetailsBtn) return;
 
     const slug = cardItem.getAttribute("data-event-id");
     currentEventSlug = slug;
