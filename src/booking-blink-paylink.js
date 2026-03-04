@@ -67,8 +67,9 @@
   }
 
   document.body.addEventListener("click", async (event) => {
+    const moreDetailsBtn = event.target.closest("#more-details-btn");
     const btn = event.target.closest(".book-button") || event.target.closest("#event-book-now") || event.target.closest(".featured-event-book-btn");
-    if (!btn) return;
+    if (!btn && !moreDetailsBtn) return;
     event.preventDefault();
 
     const popup = document.getElementById("payment-popup");
@@ -78,7 +79,17 @@
     document.body.appendChild(processingOverlay);
 
     // Extract CMS data
-    const cardItem = btn.closest("[role='listitem']") || document.querySelector('.container-large.events') || btn.closest('.featured-event') || "";
+    const activeBtn = btn || moreDetailsBtn;
+    const cardItem = activeBtn.closest("[role='listitem']") || document.querySelector('.container-large.events') || activeBtn.closest('.featured-event') || "";
+    const redirectionLink = cardItem.getAttribute("data-event-redirection-link");
+
+    if (redirectionLink) {
+      window.location.href = redirectionLink;
+      return;
+    }
+
+    if (moreDetailsBtn) return;
+
     const slug = cardItem.getAttribute("data-event-id");
     currentEventSlug = slug;
     const eventName = cardItem.getAttribute("data-event-name");
