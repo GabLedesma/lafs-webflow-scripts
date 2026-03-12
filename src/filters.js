@@ -26,7 +26,7 @@
 
     // ---------- Populate City ----------
     if (selectCity) {
-      selectCity.innerHTML = `<option value="">Select City</option>`;
+      selectCity.innerHTML = `<option value="">City</option>`;
 
       const cities = {
         US: [
