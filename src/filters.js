@@ -6,7 +6,7 @@
     const selectMonth = document.getElementById("select-month");
     const selectCity = document.getElementById("select-city");
     const selectAge = document.getElementById("select-age");
-    const goButton = document.getElementById("select-month-city-button");
+    const goButtons = document.querySelectorAll("#select-month-city-button");
 
     // ---------- Populate Month ----------
     if (selectMonth && selectMonth.options.length <= 1) {
@@ -79,7 +79,7 @@
     }
 
     // ---------- GO Button ----------
-    goButton?.addEventListener("click", () => {
+    goButtons.forEach(goButton => goButton.addEventListener("click", () => {
       const month = selectMonth?.value;
       const city = selectCity?.value;
       const age = selectAge?.value;
@@ -96,6 +96,6 @@
       if (query) url += `?${query}`;
 
       location.href = url;
-    });
+    }));
   });
 })();
