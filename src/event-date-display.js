@@ -1,9 +1,11 @@
 (() => {
-  document.addEventListener("DOMContentLoaded", () => {
-    const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-    const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-    document.querySelectorAll("[data-event-date]").forEach((item) => {
+  function applyEventDates() {
+    document.querySelectorAll(".event-item").forEach((item) => {
+      if (item.dataset.dateApplied) return;
+
       const raw = item.getAttribute("data-event-date");
       if (!raw) return;
 
@@ -17,6 +19,24 @@
       if (dayEl) dayEl.textContent = DAYS[date.getDay()];
       if (numEl) numEl.textContent = date.getDate();
       if (monthEl) monthEl.textContent = MONTHS[date.getMonth()];
+
+      item.dataset.dateApplied = "true";
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    applyEventDates();
+
+    const listWrapper = document.querySelector(".events-list-wrapper");
+    if (!listWrapper) return;
+
+    const observer = new MutationObserver(() => {
+      applyEventDates();
+    });
+
+    observer.observe(listWrapper, {
+      childList: true,
+      subtree: true,
     });
   });
 })();
