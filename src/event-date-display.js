@@ -12,9 +12,9 @@
       const date = new Date(raw);
       if (isNaN(date)) return;
 
-      const dayEl = item.querySelector(".event-date-day");
-      const numEl = item.querySelector(".event-date-num");
-      const monthEl = item.querySelector(".event-date-month");
+      const dayEl = item.querySelector("#event-date-day");
+      const numEl = item.querySelector("#event-date-num");
+      const monthEl = item.querySelector("#event-date-month");
 
       if (dayEl) dayEl.textContent = DAYS[date.getDay()];
       if (numEl) numEl.textContent = date.getDate();
