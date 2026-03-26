@@ -98,13 +98,27 @@
     let eventImage = "";
     eventImage = cardItem.querySelector(".event-image")?.src || cardItem.querySelector("#event-image")?.src || "";
 
+    // 🔹 Determine price ID from radio buttons (same logic as before)
+    let selectedPriceId = "1";
+    if (cardItem) {
+      const radioWrap = cardItem.querySelector(".radio-wrap-tickets") || cardItem.querySelector("#radio-wrap-tickets");
+      if (radioWrap && radioWrap.offsetParent !== null) {
+        const selectedRadio = cardItem.querySelector('input[name="ticketChoice"]:checked');
+        selectedPriceId = selectedRadio ? (selectedRadio.value === "two" ? "2" : "1") : "2";
+      }
+    }
+
+    // 🔀 Redirect to new checkout page
+    if (slug) {
+      window.location.href = `/checkout?slug=${encodeURIComponent(slug)}&priceId=${selectedPriceId}`;
+      return;
+    }
+
     processingOverlay.style.display = "flex";
     processingOverlay.innerHTML = "<div>Loading event details...</div>";
 
     try {
       // 🔹 Determine which price to load (scoped properly)
-      let selectedPriceId = "1";
-
       if (cardItem) {
         const radioWrap = cardItem.querySelector(".radio-wrap-tickets") || cardItem.querySelector("#radio-wrap-tickets");
 
