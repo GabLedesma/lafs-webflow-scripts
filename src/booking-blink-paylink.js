@@ -110,7 +110,7 @@
 
     // 🔀 Redirect to new checkout page (sessionStorage keeps params off the URL)
     if (slug) {
-      sessionStorage.setItem("blinkCheckoutInit", JSON.stringify({ slug, priceId: selectedPriceId }));
+      sessionStorage.setItem("blinkCheckoutInit", JSON.stringify({ slug, priceId: selectedPriceId, eventImage }));
       window.location.href = "/checkout";
       return;
     }
