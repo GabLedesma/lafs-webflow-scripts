@@ -2,7 +2,7 @@
 // 📧 Brevo Signup – Sticky Promo
 // ===============================
 (() => {
-  const BREVO_API_KEY  = "YOUR_BREVO_API_KEY";
+  const BREVO_API_KEY = window.BREVO_API_KEY;
   const BREVO_FOLDER_ID = 1; // Default folder; change if needed
 
   const brevo = (path, method = "GET", body) =>
