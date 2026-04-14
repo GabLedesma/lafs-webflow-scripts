@@ -85,6 +85,7 @@
         });
 
         if (res.ok || res.status === 204) {
+          alert("You're on the list! We'll let you know when we arrive.");
           const promos = document.querySelectorAll(".sticky-promo");
           promos.forEach(p => {
             p.style.transition = "transform 0.4s ease-in";
