@@ -44,9 +44,11 @@
     if (!nameInput || !cityInput || !emailInput || !btn) return;
 
     const form = btn.closest("form");
-    if (form) form.addEventListener("submit", e => e.preventDefault());
+    if (form) form.addEventListener("submit", e => { e.preventDefault(); e.stopPropagation(); });
 
-    btn.addEventListener("click", async () => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const name  = nameInput.value.trim();
       const city  = cityInput.value.trim();
       const email = emailInput.value.trim();
