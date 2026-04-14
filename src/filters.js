@@ -93,7 +93,7 @@
 
       if (city?.startsWith("__coming-soon:")) {
         const cityName = city.replace("__coming-soon:", "");
-        location.href = `/coming-soon?city=${encodeURIComponent(cityName)}`;
+        location.href = `/events/coming-soon?city=${encodeURIComponent(cityName)}`;
         return;
       }
 
