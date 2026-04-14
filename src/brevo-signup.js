@@ -35,13 +35,16 @@
     return created.id;
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function init() {
     const nameInput  = document.getElementById("sticky-promo-name");
     const cityInput  = document.getElementById("sticky-promo-city");
     const emailInput = document.getElementById("sticky-promo-email");
     const btn        = document.getElementById("sticky-promo-btn");
 
     if (!nameInput || !cityInput || !emailInput || !btn) return;
+
+    const form = btn.closest("form");
+    if (form) form.addEventListener("submit", e => e.preventDefault());
 
     btn.addEventListener("click", async () => {
       const name  = nameInput.value.trim();
@@ -98,7 +101,13 @@
         alert("Network error. Try again.");
       }
     });
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
