@@ -57,11 +57,11 @@
           { label: "Winchester", value: "/winchester" },
 
           // Coming soon cities
-          { label: "Exeter 🔜", value: "__coming-soon:Exeter" },
-          { label: "Inverness 🔜", value: "__coming-soon:Inverness" },
-          { label: "Lincoln 🔜", value: "__coming-soon:Lincoln" },
-          { label: "Plymouth 🔜", value: "__coming-soon:Plymouth" },
-          { label: "Portsmouth 🔜", value: "__coming-soon:Portsmouth" },
+          { label: "Exeter", value: "__coming-soon:Exeter" },
+          { label: "Inverness", value: "__coming-soon:Inverness" },
+          { label: "Lincoln", value: "__coming-soon:Lincoln" },
+          { label: "Plymouth", value: "__coming-soon:Plymouth" },
+          { label: "Portsmouth", value: "__coming-soon:Portsmouth" },
 
           // Special categories
           { label: "Party 🎉", value: "/parties" },
