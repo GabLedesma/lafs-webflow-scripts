@@ -83,10 +83,13 @@
         });
 
         if (res.ok || res.status === 204) {
-          btn.textContent = "You're on the list!";
-          nameInput.value = "";
-          cityInput.value = "";
-          emailInput.value = "";
+          const promos = document.querySelectorAll(".sticky-promo");
+          promos.forEach(p => {
+            p.style.transition = "transform 0.4s ease-in";
+            p.style.transform = "translateX(-100%)";
+          });
+          sessionStorage.setItem("promoClosed", "true");
+          setTimeout(() => promos.forEach(p => p.style.display = "none"), 400);
         } else {
           const err = await res.json().catch(() => ({}));
           console.error("Brevo error:", err);
