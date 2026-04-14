@@ -56,6 +56,13 @@
           { label: "Southampton", value: "/southampton" },
           { label: "Winchester", value: "/winchester" },
 
+          // Coming soon cities
+          { label: "Exeter 🔜", value: "__coming-soon:Exeter" },
+          { label: "Inverness 🔜", value: "__coming-soon:Inverness" },
+          { label: "Lincoln 🔜", value: "__coming-soon:Lincoln" },
+          { label: "Plymouth 🔜", value: "__coming-soon:Plymouth" },
+          { label: "Portsmouth 🔜", value: "__coming-soon:Portsmouth" },
+
           // Special categories
           { label: "Party 🎉", value: "/parties" },
           { label: "LGBTQ+ 🌈", value: "/lgbtq" },
@@ -83,6 +90,12 @@
       const month = selectMonth?.value;
       const city = selectCity?.value;
       const age = selectAge?.value;
+
+      if (city?.startsWith("__coming-soon:")) {
+        const cityName = city.replace("__coming-soon:", "");
+        location.href = `/coming-soon?city=${encodeURIComponent(cityName)}`;
+        return;
+      }
 
       let url = "/events";
       if (city) url += city;
