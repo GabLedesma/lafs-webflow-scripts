@@ -2,37 +2,10 @@
 // 📧 Brevo Signup – Sticky Promo
 // ===============================
 (() => {
-  const BREVO_API_KEY = window.BREVO_API_KEY;
-  const BREVO_FOLDER_ID = 1; // Default folder; change if needed
+  const WORKER_URL = "https://loveatfirstsign.workers.dev";
 
-  const brevo = (path, method = "GET", body) =>
-    fetch(`https://api.brevo.com/v3${path}`, {
-      method,
-      headers: { "Content-Type": "application/json", "api-key": BREVO_API_KEY },
-      ...(body ? { body: JSON.stringify(body) } : {}),
-    }).then(r => r.json());
-
-  async function getOrCreateListId(city) {
-    const listName = `LAFS - ${city}`;
-    const cacheKey = `brevo_list_id_${city.toLowerCase()}`;
-
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) return Number(cached);
-
-    const { lists = [] } = await brevo("/contacts/lists?limit=50");
-    const existing = lists.find(l => l.name === listName);
-
-    if (existing) {
-      localStorage.setItem(cacheKey, existing.id);
-      return existing.id;
-    }
-
-    const created = await brevo("/contacts/lists", "POST", {
-      name: listName,
-      folderId: BREVO_FOLDER_ID,
-    });
-    localStorage.setItem(cacheKey, created.id);
-    return created.id;
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
   function init() {
@@ -49,6 +22,7 @@
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
+
       const name  = nameInput.value.trim();
       const city  = cityInput.value.trim();
       const email = emailInput.value.trim();
@@ -68,23 +42,13 @@
       btn.textContent = "Sending…";
 
       try {
-        const listId = await getOrCreateListId(city);
-
-        const res = await fetch("https://api.brevo.com/v3/contacts", {
+        const res = await fetch(WORKER_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "api-key": BREVO_API_KEY,
-          },
-          body: JSON.stringify({
-            email,
-            attributes: { FIRSTNAME: name, CITY: city },
-            listIds: [listId],
-            updateEnabled: true,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, city, email }),
         });
 
-        if (res.ok || res.status === 204) {
+        if (res.ok) {
           alert("You're on the list! We'll let you know when we arrive.");
           const promos = document.querySelectorAll(".sticky-promo");
           promos.forEach(p => {
@@ -94,14 +58,13 @@
           sessionStorage.setItem("promoClosed", "true");
           setTimeout(() => promos.forEach(p => p.style.display = "none"), 400);
         } else {
-          const err = await res.json().catch(() => ({}));
-          console.error("Brevo error:", err);
+          console.error("Signup error:", await res.json().catch(() => ({})));
           btn.disabled = false;
           btn.textContent = original;
           alert("Something went wrong. Try again.");
         }
-      } catch (e) {
-        console.error("Brevo signup failed:", e);
+      } catch (err) {
+        console.error("Brevo signup failed:", err);
         btn.disabled = false;
         btn.textContent = original;
         alert("Network error. Try again.");
@@ -114,10 +77,4 @@
   } else {
     init();
   }
-
-  function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-
 })();

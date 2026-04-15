@@ -1,0 +1,6 @@
+name = "brevo-proxy"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# After deploying, add your secret with:
+#   npx wrangler secret put BREVO_API_KEY
