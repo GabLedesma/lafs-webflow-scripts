@@ -2,7 +2,7 @@
 // 📧 Brevo Signup – Sticky Promo
 // ===============================
 (() => {
-  const WORKER_URL = "https://loveatfirstsign.workers.dev";
+  const WORKER_URL = "https://brevo-proxy.loveatfirstsign.workers.dev";
 
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
