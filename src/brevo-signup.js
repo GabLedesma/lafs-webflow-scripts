@@ -70,6 +70,11 @@
 
       const matchedCity = findLiveCity(city);
       if (matchedCity) {
+        fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, city, email }),
+        }).catch(() => {});
         location.href = `/events${matchedCity.value}`;
         return;
       }
