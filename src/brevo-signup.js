@@ -4,6 +4,37 @@
 (() => {
   const WORKER_URL = "https://brevo-proxy.loveatfirstsign.workers.dev";
 
+  const LIVE_CITIES = [
+    { label: "Los Angeles",    value: "/los-angeles" },
+    { label: "New York",       value: "/new-york" },
+    { label: "Bath",           value: "/bath" },
+    { label: "Birmingham",     value: "/birmingham" },
+    { label: "Bournemouth",    value: "/bournemouth" },
+    { label: "Brighton",       value: "/brighton" },
+    { label: "Bristol",        value: "/bristol" },
+    { label: "Cambridge",      value: "/cambridge" },
+    { label: "Cardiff",        value: "/cardiff" },
+    { label: "Edinburgh",      value: "/edinburgh" },
+    { label: "Glasgow",        value: "/glasgow" },
+    { label: "Guildford",      value: "/guildford" },
+    { label: "Leamington Spa", value: "/leamington-spa" },
+    { label: "Leeds",          value: "/leeds" },
+    { label: "Leicester",      value: "/leicester" },
+    { label: "London",         value: "/london" },
+    { label: "Manchester",     value: "/manchester" },
+    { label: "Newcastle",      value: "/newcastle" },
+    { label: "Nottingham",     value: "/nottingham" },
+    { label: "Reading",        value: "/reading" },
+    { label: "Sheffield",      value: "/sheffield" },
+    { label: "Southampton",    value: "/southampton" },
+    { label: "Winchester",     value: "/winchester" },
+  ];
+
+  function findLiveCity(input) {
+    const normalized = input.trim().toLowerCase();
+    return LIVE_CITIES.find(c => c.label.toLowerCase() === normalized) ?? null;
+  }
+
   function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
@@ -34,6 +65,12 @@
 
       if (!isValidEmail(email)) {
         alert("Enter a valid email.");
+        return;
+      }
+
+      const matchedCity = findLiveCity(city);
+      if (matchedCity) {
+        location.href = `/events${matchedCity.value}`;
         return;
       }
 
