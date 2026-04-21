@@ -30,9 +30,46 @@
     { label: "Winchester",     value: "/winchester" },
   ];
 
+  const ALL_UK_CITIES = [
+    "Aberdeen", "Aberystwyth", "Aldershot", "Armagh",
+    "Ayr", "Bangor", "Barnsley", "Basildon", "Bath", "Bedford",
+    "Belfast", "Birkenhead", "Birmingham", "Blackburn", "Blackpool",
+    "Bolton", "Bournemouth", "Bradford", "Brighton", "Bristol",
+    "Burnley", "Cambridge", "Canterbury", "Cardiff", "Carlisle",
+    "Chelmsford", "Cheltenham", "Chester", "Chichester", "Colchester",
+    "Coventry", "Crawley", "Derby", "Derry", "Dundee", "Durham",
+    "Edinburgh", "Exeter", "Gloucester", "Glasgow", "Guildford",
+    "Halifax", "Hereford", "Huddersfield", "Hull", "Inverness",
+    "Ipswich", "Leamington Spa", "Leeds", "Leicester", "Lincoln",
+    "Liverpool", "London", "Londonderry", "Luton", "Manchester",
+    "Middlesbrough", "Milton Keynes", "Newcastle", "Newport", "Norwich",
+    "Nottingham", "Oxford", "Perth", "Peterborough", "Plymouth",
+    "Portsmouth", "Preston", "Reading", "Rochdale", "Salford",
+    "Salisbury", "Sheffield", "Slough", "Southampton", "Southend-on-Sea",
+    "St Albans", "Stirling", "Stoke-on-Trent", "Sunderland", "Swansea",
+    "Swindon", "Telford", "Truro", "Wakefield", "Walsall", "Warrington",
+    "Winchester", "Wolverhampton", "Worcester", "Wrexham", "York",
+  ].sort((a, b) => a.localeCompare(b));
+
   function findLiveCity(input) {
     const normalized = input.trim().toLowerCase();
     return LIVE_CITIES.find(c => c.label.toLowerCase() === normalized) ?? null;
+  }
+
+  function populateCityDropdown(select) {
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "City";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    select.appendChild(placeholder);
+
+    ALL_UK_CITIES.forEach(city => {
+      const opt = document.createElement("option");
+      opt.value = city;
+      opt.textContent = city;
+      select.appendChild(opt);
+    });
   }
 
   function isValidEmail(email) {
@@ -46,6 +83,8 @@
     const btn        = document.getElementById("sticky-promo-btn");
 
     if (!nameInput || !cityInput || !emailInput || !btn) return;
+
+    populateCityDropdown(cityInput);
 
     const form = btn.closest("form");
     if (form) form.addEventListener("submit", e => { e.preventDefault(); e.stopPropagation(); });
